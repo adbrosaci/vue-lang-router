@@ -1,0 +1,26 @@
+{
+	"name": "vue-lang-router",
+	"version": "0.1.1",
+	"description": "Vue language routing with (optional) localized URLs",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/radek-altof/vue-lang-router.git"
+	},
+	"keywords": [
+		"vue",
+		"router",
+		"routing",
+		"lang",
+		"languages",
+		"i18n",
+		"localization",
+		"plugin"
+	],
+	"author": {
+		"name": "Radek Altof",
+		"email": "radek.altof@gmail.com",
+		"url": "http://radekaltof.com"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/radek-altof/vue-lang-router#readme"
+}
