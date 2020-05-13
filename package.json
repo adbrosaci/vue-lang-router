@@ -22,5 +22,9 @@
 		"url": "http://radekaltof.com"
 	},
 	"license": "MIT",
-	"homepage": "https://github.com/radek-altof/vue-lang-router#readme"
+	"homepage": "https://github.com/radek-altof/vue-lang-router#readme",
+	"dependencies": {
+		"vue-i18n": "^8.16.0",
+		"vue-router": "^3.1.5"
+	}
 }
