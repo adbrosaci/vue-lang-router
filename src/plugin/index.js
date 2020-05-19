@@ -5,10 +5,13 @@ import VueRouter from 'vue-router';
 import { translations, defaultLanguage } from '@lang/translations';
 import localizedURLs from '@lang/localized-urls';
 
+import LocalizedLink from './components/LocalizedLink.vue';
+import LanguageSwitcher from './components/LanguageSwitcher.vue';
+
+
+// Register plugins
 Vue.use(VueI18n);
 Vue.use(VueRouter);
-
-
 
 
 // Init internalization plugin
@@ -241,73 +244,6 @@ LangRouter.install = function (V) {
 };
 
 
-// Add <localized-link> component that extends <router-link> and localizes URL
-Vue.component('localized-link', {
-	props: [ 'to' ],
-	computed: {
-		localizedTo () {
-
-			// If "to" is a string, localize it
-			if (typeof this.to === 'string') {
-				return this.$localizedUrl(this.to);
-			}
-
-			// If "to" is an object with "path", copy it and localize "path"
-			else if (typeof this.to === 'object' && typeof this.to.path === 'string') {
-				const o = JSON.parse(JSON.stringify(this.to));
-				o.path = this.$localizedUrl(o.path);
-				return o;
-			}
-
-			// If "to" is an object without "path", just pass it on
-			else {
-				return this.to;
-			}
-		},
-	},
-	template:
-	`<router-link :to="localizedTo" v-bind="$attrs">
-		<slot />
-	</router-link>`,
-});
-
-
-// Add <language-switcher> component that generates links to the given/current page in all available languages
-Vue.component('language-switcher', {
-	data () {
-		return {
-			currentUrl: this.url || this.$router.currentRoute.path,
-		};
-	},
-	props: [ 'tag', 'active-class', 'url' ],
-	methods: {
-		getTag () {
-			if (this.tag) { return this.tag; }
-			else { return 'div'; }
-		},
-		getLinks () {
-			let links = [];
-			const activeClass = this.activeClass || 'router-active-language';
-
-			for (let [ lang, data ] of Object.entries(translations)) {
-				links.push({
-					activeClass: (lang == i18n.locale ? activeClass : ''),
-					langIndex: lang,
-					langName: data.name,
-					url: this.$localizedUrl(this.currentUrl, lang),
-				});
-			}
-
-			return links;
-		},
-	},
-	watch: {
-		$route (to) {
-			this.currentUrl = this.url || to.path;
-		},
-	},
-	template:
-	`<component :is="getTag()" class="router-language-switcher">
-		<slot :links="getLinks()" />
-	</component>`,
-});
+// Register components
+Vue.component('localized-link', LocalizedLink);
+Vue.component('language-switcher', LanguageSwitcher);
