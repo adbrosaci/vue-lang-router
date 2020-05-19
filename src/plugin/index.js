@@ -19,6 +19,13 @@ let defaultLanguage, translations, localizedURLs, i18n;
 const loadedTranslations = [];
 
 
+// Error logging
+function err (msg, error) {
+	console.error('LangRouter: ' + msg);
+	if (typeof error !== 'undefined') { console.error(error); }
+}
+
+
 // Function for switching to a loaded language
 function setLanguage (lang) {
 	i18n.locale = lang;
@@ -38,10 +45,18 @@ function loadLanguage (lang) {
 	}
 
 	// If the translation hasn't been loaded
+	// Check if the load function exists
+	if (typeof translations[lang].load !== 'function') {
+		err('Unable to load translations for "' + lang + '", "load" function is missing!');
+	}
+
+	// Load the translation
 	return translations[lang].load().then(function (messages) {
 		i18n.setLocaleMessage(lang, messages.default || messages);
 		loadedTranslations.push(lang);
 		return setLanguage(lang);
+	}).catch(function (error) {
+		err('Failed to load "' + lang + '" translation.', error);
 	});
 }
 
@@ -209,24 +224,24 @@ LangRouter.install = function (V, options) {
 
 	// Check if variables look okay
 	if (typeof translations !== 'object' || translations === null) {
-		console.error('LangRouter: "translations" should be an object, received ' + typeof translations + ' instead.');
+		err('"translations" should be an object, received ' + typeof translations + ' instead.');
 	}
 	if (Array.isArray(translations)) {
-		console.error('LangRouter: "translations" should be an object, not an array.');
+		err('"translations" should be an object, not an array.');
 	}
 
 	if (typeof localizedURLs !== 'object' || localizedURLs === null) {
-		console.error('LangRouter: "localizedURLs" should be an object, received ' + typeof localizedURLs + ' instead.');
+		err('"localizedURLs" should be an object, received ' + typeof localizedURLs + ' instead.');
 	}
 	if (Array.isArray(localizedURLs)) {
-		console.error('LangRouter: "localizedURLs" should be an object, not an array.');
+		err('"localizedURLs" should be an object, not an array.');
 	}
 
 	if (typeof defaultLanguage !== 'string') {
-		console.error('LangRouter: "defaultLanguage" should be a string, received ' + typeof defaultLanguage + ' instead.');
+		err('"defaultLanguage" should be a string, received ' + typeof defaultLanguage + ' instead.');
 	}
 	if (!translations[defaultLanguage]) {
-		console.error('LangRouter: "' + defaultLanguage + '" not found in "translations".');
+		err('"' + defaultLanguage + '" not found in "translations".');
 	}
 
 	// Init internalization plugin

@@ -30,7 +30,7 @@ export default {
 				links.push({
 					activeClass: (lang == i18n.locale ? activeClass : ''),
 					langIndex: lang,
-					langName: data.name,
+					langName: data.name || lang,
 					url: this.$localizedUrl(this.currentUrl, lang),
 				});
 			}
