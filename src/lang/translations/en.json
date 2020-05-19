@@ -1,0 +1,17 @@
+{
+	"nav": {
+		"home": "Home",
+		"about": "About",
+		"user": "User"
+	},
+	"hello": "Hello motherfucker",
+	"content": "This is content",
+	"about": {
+		"content": "This is an about page"
+	},
+	"user-slug": "User in URL is: ",
+	"pos": {
+		"info": "Branch info",
+		"manager": "Branch manager"
+	}
+}
