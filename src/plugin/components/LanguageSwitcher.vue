@@ -7,8 +7,7 @@
 <script>
 // <language-switcher> component generates links to the given/current page in all available languages
 
-import { translations } from '@lang/translations';
-import { i18n } from '../index';
+import { i18n, translations } from '../index';
 
 export default {
 	name: 'LanguageSwitcher',

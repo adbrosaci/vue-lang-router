@@ -2,7 +2,15 @@ import Vue from 'vue';
 import LangRouter from '../plugin';
 import Home from '../views/Home.vue';
 
-Vue.use(LangRouter);
+import translations from '../lang/translations';
+import localizedURLs from '../lang/localized-urls';
+
+
+Vue.use(LangRouter, {
+	defaultLanguage: 'en',
+	translations,
+	localizedURLs,
+});
 
 
 const routes = [

@@ -2,9 +2,6 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 
-import { translations, defaultLanguage } from '@lang/translations';
-import localizedURLs from '@lang/localized-urls';
-
 import LocalizedLink from './components/LocalizedLink.vue';
 import LanguageSwitcher from './components/LanguageSwitcher.vue';
 
@@ -14,12 +11,8 @@ Vue.use(VueI18n);
 Vue.use(VueRouter);
 
 
-// Init internalization plugin
-export const i18n = new VueI18n({
-	locale: defaultLanguage,
-	fallbackLocale: defaultLanguage,
-	messages: {},
-});
+// Define vars
+let defaultLanguage, translations, localizedURLs, i18n;
 
 
 // Array of loaded translations
@@ -45,7 +38,7 @@ function loadLanguage (lang) {
 	}
 
 	// If the translation hasn't been loaded
-	return import(/* webpackChunkName: "lang-[request]" */ '@lang/translations/' + translations[lang].file).then(function (messages) {
+	return translations[lang].load().then(function (messages) {
 		i18n.setLocaleMessage(lang, messages.default || messages);
 		loadedTranslations.push(lang);
 		return setLanguage(lang);
@@ -207,7 +200,41 @@ function getPrefferedLanguage () {
 
 
 // Install method of the LangRouter plugin
-LangRouter.install = function (V) {
+LangRouter.install = function (V, options) {
+
+	// Get the options
+	defaultLanguage = options.defaultLanguage;
+	translations = options.translations;
+	localizedURLs = options.localizedURLs;
+
+	// Check if variables look okay
+	if (typeof translations !== 'object' || translations === null) {
+		console.error('LangRouter: "translations" should be an object, received ' + typeof translations + ' instead.');
+	}
+	if (Array.isArray(translations)) {
+		console.error('LangRouter: "translations" should be an object, not an array.');
+	}
+
+	if (typeof localizedURLs !== 'object' || localizedURLs === null) {
+		console.error('LangRouter: "localizedURLs" should be an object, received ' + typeof localizedURLs + ' instead.');
+	}
+	if (Array.isArray(localizedURLs)) {
+		console.error('LangRouter: "localizedURLs" should be an object, not an array.');
+	}
+
+	if (typeof defaultLanguage !== 'string') {
+		console.error('LangRouter: "defaultLanguage" should be a string, received ' + typeof defaultLanguage + ' instead.');
+	}
+	if (!translations[defaultLanguage]) {
+		console.error('LangRouter: "' + defaultLanguage + '" not found in "translations".');
+	}
+
+	// Init internalization plugin
+	i18n = new VueI18n({
+		locale: defaultLanguage,
+		fallbackLocale: defaultLanguage,
+		messages: {},
+	});
 
 	// Add $localizedURL method to return localized path
 	V.prototype.$localizedUrl = function (path, lang) {
@@ -247,3 +274,7 @@ LangRouter.install = function (V) {
 // Register components
 Vue.component('localized-link', LocalizedLink);
 Vue.component('language-switcher', LanguageSwitcher);
+
+
+// Export what's needed
+export { i18n, translations };
