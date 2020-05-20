@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 
@@ -55,7 +54,7 @@ export default class LangRouter {
 
 
 // Install method of the LangRouter plugin
-LangRouter.install = function (V, options) {
+LangRouter.install = function (Vue, options) {
 
 	// Get the options
 	defaultLanguage = options.defaultLanguage;
@@ -89,8 +88,11 @@ LangRouter.install = function (V, options) {
 	Vue.component('localized-link', LocalizedLink);
 	Vue.component('language-switcher', LanguageSwitcher);
 
+	// Add translations to use in <language-switcher>
+	Vue.prototype._langRouter = { translations };
+
 	// Add $localizedURL method to return localized path
-	V.prototype.$localizedUrl = localizePath;
+	Vue.prototype.$localizedUrl = localizePath;
 };
 
 
@@ -289,4 +291,4 @@ function localizePath (path, lang) {
 
 
 // Export what's needed
-export { i18n, translations };
+export { i18n };
