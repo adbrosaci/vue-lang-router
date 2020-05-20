@@ -26,13 +26,15 @@ export default {
 			let links = [];
 			const activeClass = this.activeClass || 'router-active-language';
 
-			for (let [ lang, data ] of Object.entries(translations)) {
-				links.push({
-					activeClass: (lang == i18n.locale ? activeClass : ''),
-					langIndex: lang,
-					langName: data.name || lang,
-					url: this.$localizedUrl(this.currentUrl, lang),
-				});
+			for (let lang in translations) {
+				if (translations.hasOwnProperty(lang)) {
+					links.push({
+						activeClass: (lang == i18n.locale ? activeClass : ''),
+						langIndex: lang,
+						langName: translations[lang].name || lang,
+						url: this.$localizedUrl(this.currentUrl, lang),
+					});
+				}
 			}
 
 			return links;
