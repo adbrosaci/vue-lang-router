@@ -84,15 +84,15 @@ LangRouter.install = function (Vue, options) {
 		messages: {},
 	});
 
-	// Register components
-	Vue.component('localized-link', LocalizedLink);
-	Vue.component('language-switcher', LanguageSwitcher);
-
 	// Add translations to use in <language-switcher>
 	Vue.prototype._langRouter = { translations };
 
-	// Add $localizedURL method to return localized path
-	Vue.prototype.$localizedUrl = localizePath;
+	// Add $localizePath method to return localized path
+	Vue.prototype.$localizePath = localizePath;
+
+	// Register components
+	Vue.component('localized-link', LocalizedLink);
+	Vue.component('language-switcher', LanguageSwitcher);
 };
 
 

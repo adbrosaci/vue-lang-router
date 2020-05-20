@@ -31,7 +31,7 @@ export default {
 						activeClass: (lang == this.$i18n.locale ? activeClass : ''),
 						langIndex: lang,
 						langName: tr[lang].name || lang,
-						url: this.$localizedUrl(this.currentUrl, lang),
+						url: this.$localizePath(this.currentUrl, lang),
 					});
 				}
 			}
