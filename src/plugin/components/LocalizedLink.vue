@@ -1,5 +1,5 @@
 <template>
-	<router-link :to="localizedTo" v-bind="$attrs">
+	<router-link :to="localizedTo()" v-bind="$attrs">
 		<slot />
 	</router-link>
 </template>
@@ -10,7 +10,7 @@
 export default {
 	name: 'LocalizedLink',
 	props: [ 'to' ],
-	computed: {
+	methods: {
 		localizedTo () {
 
 			// If "to" is a string, localize it
