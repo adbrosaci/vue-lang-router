@@ -1,6 +1,6 @@
-import Vue, { resolveComponent, openBlock, createBlock, mergeProps, withCtx, renderSlot, resolveDynamicComponent } from 'vue';
 import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
+import { resolveComponent, openBlock, createBlock, mergeProps, withCtx, renderSlot, resolveDynamicComponent } from 'vue';
 
 //
 //
@@ -14,18 +14,18 @@ import VueRouter from 'vue-router';
 var script = {
 	name: 'LocalizedLink',
 	props: [ 'to' ],
-	computed: {
+	methods: {
 		localizedTo: function localizedTo () {
 
 			// If "to" is a string, localize it
 			if (typeof this.to === 'string') {
-				return this.$localizedUrl(this.to);
+				return this.$localizePath(this.to);
 			}
 
 			// If "to" is an object with "path", copy it and localize "path"
 			else if (typeof this.to === 'object' && typeof this.to.path === 'string') {
 				var o = JSON.parse(JSON.stringify(this.to));
-				o.path = this.$localizedUrl(o.path);
+				o.path = this.$localizePath(o.path);
 				return o;
 			}
 
@@ -40,7 +40,9 @@ var script = {
 function render(_ctx, _cache) {
   var _component_router_link = resolveComponent("router-link");
 
-  return (openBlock(), createBlock(_component_router_link, mergeProps({ to: _ctx.localizedTo }, _ctx.$attrs), {
+  return (openBlock(), createBlock(_component_router_link, mergeProps({
+    to: _ctx.localizedTo()
+  }, _ctx.$attrs), {
     default: withCtx(function () { return [
       renderSlot(_ctx.$slots, "default")
     ]; }),
@@ -52,6 +54,13 @@ script.render = render;
 script.__file = "src/plugin/components/LocalizedLink.vue";
 
 //
+//
+//
+//
+//
+//
+
+// <language-switcher> component generates links to the given/current page in all available languages
 
 var script$1 = {
 	name: 'LanguageSwitcher',
@@ -69,14 +78,15 @@ var script$1 = {
 		getLinks: function getLinks () {
 			var links = [];
 			var activeClass = this.activeClass || 'router-active-language';
+			var tr = this._langRouter.translations;
 
-			for (var lang in translations) {
-				if (translations.hasOwnProperty(lang)) {
+			for (var lang in tr) {
+				if (tr.hasOwnProperty(lang)) {
 					links.push({
-						activeClass: (lang == i18n.locale ? activeClass : ''),
+						activeClass: (lang == this.$i18n.locale ? activeClass : ''),
 						langIndex: lang,
-						langName: translations[lang].name || lang,
-						url: this.$localizedUrl(this.currentUrl, lang),
+						langName: tr[lang].name || lang,
+						url: this.$localizePath(this.currentUrl, lang),
 					});
 				}
 			}
@@ -105,11 +115,6 @@ function render$1(_ctx, _cache) {
 script$1.render = render$1;
 script$1.__file = "src/plugin/components/LanguageSwitcher.vue";
 
-// Register plugins
-Vue.use(VueI18n);
-Vue.use(VueRouter);
-
-
 // Define vars
 var defaultLanguage, translations, localizedURLs, i18n;
 
@@ -125,7 +130,79 @@ function err (msg, error) {
 }
 
 
-// Function for switching to a loaded language
+// LangRouter class adds localized URL functionality to Vue Router
+var LangRouter = function LangRouter (options) {
+
+	// If any language is missing from localized URLs, add it as an empty object
+	// All aliases need to be created for language switching purposes
+	for (var lang in translations) {
+		if (translations.hasOwnProperty(lang) && !localizedURLs[lang]) {
+			localizedURLs[lang] = {};
+		}
+	}
+
+	// Cycle through all the available languages and add aliases to routes
+	for (var lang$1 in localizedURLs) {
+		if (localizedURLs.hasOwnProperty(lang$1)) {
+			addAliasesToRoutes(options.routes, lang$1);
+		}
+	}
+
+	// Create Vue Router instance
+	var router = new VueRouter(options);
+
+	// Add language switching logic
+	router.beforeEach(switchLanguage);
+
+	// Return Vue Router instance
+	return router;
+};
+
+
+// Install method of the LangRouter plugin
+LangRouter.install = function (Vue, options) {
+
+	// Get the options
+	defaultLanguage = options.defaultLanguage;
+	translations = options.translations;
+	localizedURLs = options.localizedURLs;
+
+	// Check if variables look okay
+	var isArr;
+	if ((isArr = Array.isArray(translations)) || typeof translations !== 'object' || translations === null) {
+		err('"translations" should be an object, received ' + (isArr ? 'array' : typeof translations) + ' instead.');
+	}
+	if ((isArr = Array.isArray(localizedURLs)) || typeof localizedURLs !== 'object' || localizedURLs === null) {
+		err('"localizedURLs" should be an object, received ' + (isArr ? 'array' : typeof localizedURLs) + ' instead.');
+	}
+	if (typeof defaultLanguage !== 'string') {
+		err('"defaultLanguage" should be a string, received ' + typeof defaultLanguage + ' instead.');
+	}
+
+	// Register plugins
+	Vue.use(VueI18n);
+	Vue.use(VueRouter);
+
+	// Init internalization plugin
+	i18n = new VueI18n({
+		locale: defaultLanguage,
+		fallbackLocale: defaultLanguage,
+		messages: {},
+	});
+
+	// Add translations to use in <language-switcher>
+	Vue.prototype._langRouter = { translations: translations };
+
+	// Add $localizePath method to return localized path
+	Vue.prototype.$localizePath = localizePath;
+
+	// Register components
+	Vue.component('localized-link', script);
+	Vue.component('language-switcher', script$1);
+};
+
+
+// Switching to a loaded language
 function setLanguage (lang) {
 	i18n.locale = lang;
 	document.querySelector('html').setAttribute('lang', lang);
@@ -134,7 +211,7 @@ function setLanguage (lang) {
 }
 
 
-// Function for loading translations asynchronously
+// Loading translations asynchronously
 // Returns promise
 function loadLanguage (lang) {
 
@@ -145,7 +222,7 @@ function loadLanguage (lang) {
 
 	// If the translation hasn't been loaded
 	// Check if the load function exists
-	if (typeof translations[lang].load !== 'function') {
+	if (!translations[lang] || typeof translations[lang].load !== 'function') {
 		err('Unable to load translations for "' + lang + '", "load" function is missing!');
 	}
 
@@ -160,72 +237,8 @@ function loadLanguage (lang) {
 }
 
 
-
-
-
-// LangRouter class adds localized URL functionality to Vue Router
-var LangRouter = function LangRouter (options) {
-
-	// If any language is missing from localized URLs, add it as an empty object
-	// All aliases need to be created for language switching purposes
-	for (var lang in translations) {
-		if (translations.hasOwnProperty(lang) && !localizedURLs[lang]) {
-			localizedURLs[lang] = {};
-		}
-	}
-
-	// Cycle through all the available languages and add aliases to routes
-	for (var lang$1 in localizedURLs) {
-		if (localizedURLs.hasOwnProperty(lang$1)) { this.addAliasesToRoutes(options.routes, lang$1); }
-	}
-
-	// Create Vue Router instance
-	var router = new VueRouter(options);
-
-	// Language switching logic
-	router.beforeEach(function (to, from, next) {
-		var lang = to.path.split('/')[1];
-
-		// If language isn't available in the URL
-		if (!translations[lang]) {
-
-			// Set the language to saved one if available
-			var savedLang = localStorage.getItem('VueAppLanguage');
-			if (savedLang && translations[savedLang]) { lang = savedLang; }
-			else {
-
-				// Set the language to preferred one if available
-				var preferredLang = getPrefferedLanguage();
-				if (preferredLang && translations[preferredLang]) { lang = preferredLang; }
-
-				// Otherwise set default language
-				else { lang = defaultLanguage; }
-			}
-
-			// If the language isn't default one, translate path and redirect to it
-			if (lang != defaultLanguage) {
-
-				// Translate path
-				var translatedPath = translatePath(to.path, lang);
-
-				// Add language prefix to the path
-				translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
-
-				return next(translatedPath);
-			}
-		}
-
-		// Load requested language
-		loadLanguage(lang).then(function () {
-			return next();
-		});
-	});
-
-	// Return Vue Router instance
-	return router;
-};
-
-LangRouter.prototype.addAliasesToRoutes = function addAliasesToRoutes (routes, lang, child) {
+// Adding aliases to routes
+function addAliasesToRoutes (routes, lang, child) {
 
 	// Iterate over each route
 	routes.forEach(function (route) {
@@ -246,10 +259,50 @@ LangRouter.prototype.addAliasesToRoutes = function addAliasesToRoutes (routes, l
 		if (route.path != alias && route.alias.indexOf(alias) == -1) { route.alias.push(alias); }
 
 		// If the route has children, iterate over those too
-		if (route.children) { this.addAliasesToRoutes(route.children, lang, true); }
+		if (route.children) { addAliasesToRoutes(route.children, lang, true); }
 
-	}, this);
-};
+	});
+}
+
+
+// Router - language switching
+function switchLanguage (to, from, next) {
+	var lang = to.path.split('/')[1];
+
+	// If language isn't available in the URL
+	if (!translations[lang]) {
+
+		// Set the language to saved one if available
+		var savedLang = localStorage.getItem('VueAppLanguage');
+		if (savedLang && translations[savedLang]) { lang = savedLang; }
+		else {
+
+			// Set the language to preferred one if available
+			var preferredLang = getPrefferedLanguage();
+			if (preferredLang && translations[preferredLang]) { lang = preferredLang; }
+
+			// Otherwise set default language
+			else { lang = defaultLanguage; }
+		}
+
+		// If the language isn't default one, translate path and redirect to it
+		if (lang != defaultLanguage) {
+
+			// Translate path
+			var translatedPath = translatePath(to.path, lang);
+
+			// Add language prefix to the path
+			translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
+
+			return next(translatedPath);
+		}
+	}
+
+	// Load requested language
+	loadLanguage(lang).then(function () {
+		return next();
+	});
+}
 
 
 // Path translation
@@ -309,81 +362,38 @@ function getPrefferedLanguage () {
 }
 
 
-// Install method of the LangRouter plugin
-LangRouter.install = function (V, options) {
+// Path localization
+function localizePath (path, lang) {
 
-	// Get the options
-	defaultLanguage = options.defaultLanguage;
-	translations = options.translations;
-	localizedURLs = options.localizedURLs;
+	// If the desired language is not defined or it doesn't exist, use current one
+	if (!lang || !localizedURLs[lang]) { lang = i18n.locale; }
 
-	// Check if variables look okay
-	if (typeof translations !== 'object' || translations === null) {
-		err('"translations" should be an object, received ' + typeof translations + ' instead.');
-	}
-	if (Array.isArray(translations)) {
-		err('"translations" should be an object, not an array.');
-	}
+	// Split path into chunks
+	var pathLang = false;
+	var pathChunks = path.split('/');
 
-	if (typeof localizedURLs !== 'object' || localizedURLs === null) {
-		err('"localizedURLs" should be an object, received ' + typeof localizedURLs + ' instead.');
-	}
-	if (Array.isArray(localizedURLs)) {
-		err('"localizedURLs" should be an object, not an array.');
+	// If the path is in some language, remove it from path and indicate it for translation
+	if (localizedURLs[pathChunks[1]]) {
+		pathLang = pathChunks[1];
+		pathChunks.splice(1, 1);
+		path = pathChunks.join('/');
 	}
 
-	if (typeof defaultLanguage !== 'string') {
-		err('"defaultLanguage" should be a string, received ' + typeof defaultLanguage + ' instead.');
-	}
-	if (!translations[defaultLanguage]) {
-		err('"' + defaultLanguage + '" not found in "translations".');
-	}
+	// If the language is default language
+	// & current path doesn't contain a language
+	// & path to translate doesn't contain a language
+	// = no need to localize
+	var currentPathLang = this.$router.currentRoute.path.split('/')[1];
+	if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
 
-	// Init internalization plugin
-	i18n = new VueI18n({
-		locale: defaultLanguage,
-		fallbackLocale: defaultLanguage,
-		messages: {},
-	});
+	// Translate path
+	var translatedPath = translatePath(path, lang, pathLang);
 
-	// Add $localizedURL method to return localized path
-	V.prototype.$localizedUrl = function (path, lang) {
+	// Add language prefix to the path
+	translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 
-		// If the desired language is not defined or it doesn't exist, use current one
-		if (!lang || !localizedURLs[lang]) { lang = i18n.locale; }
-
-		// Split path into chunks
-		var pathLang = false;
-		var pathChunks = path.split('/');
-
-		// If the path is in some language, remove it from path and indicate it for translation
-		if (localizedURLs[pathChunks[1]]) {
-			pathLang = pathChunks[1];
-			pathChunks.splice(1, 1);
-			path = pathChunks.join('/');
-		}
-
-		// If the language is default language
-		// & current path doesn't contain a language
-		// & path to translate doesn't contain a language
-		// = no need to localize
-		var currentPathLang = this.$router.currentRoute.path.split('/')[1];
-		if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
-
-		// Translate path
-		var translatedPath = translatePath(path, lang, pathLang);
-
-		// Add language prefix to the path
-		translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
-
-		return translatedPath;
-	};
-};
-
-
-// Register components
-Vue.component('localized-link', script);
-Vue.component('language-switcher', script$1);
+	return translatedPath;
+}
 
 export default LangRouter;
-export { i18n, translations };
+export { i18n };
