@@ -56,7 +56,17 @@ export default class LangRouter {
 // Install method of the LangRouter plugin
 LangRouter.install = function (Vue, options) {
 
+	// Check if plugin is installed already
+	if (LangRouter.installed) {
+		err('Already installed.');
+		return;
+	}
+	LangRouter.installed = true;
+
 	// Get the options
+	if (!options) {
+		err('Options missing.');
+	}
 	defaultLanguage = options.defaultLanguage;
 	translations = options.translations;
 	localizedURLs = options.localizedURLs;
@@ -64,13 +74,13 @@ LangRouter.install = function (Vue, options) {
 	// Check if variables look okay
 	let isArr;
 	if ((isArr = Array.isArray(translations)) || typeof translations !== 'object' || translations === null) {
-		err('"translations" should be an object, received ' + (isArr ? 'array' : typeof translations) + ' instead.');
+		err('options.translations should be an object, received ' + (isArr ? 'array' : typeof translations) + ' instead.');
 	}
 	if ((isArr = Array.isArray(localizedURLs)) || typeof localizedURLs !== 'object' || localizedURLs === null) {
-		err('"localizedURLs" should be an object, received ' + (isArr ? 'array' : typeof localizedURLs) + ' instead.');
+		err('options.localizedURLs should be an object, received ' + (isArr ? 'array' : typeof localizedURLs) + ' instead.');
 	}
 	if (typeof defaultLanguage !== 'string') {
-		err('"defaultLanguage" should be a string, received ' + typeof defaultLanguage + ' instead.');
+		err('options.defaultLanguage should be a string, received ' + typeof defaultLanguage + ' instead.');
 	}
 
 	// Register plugins
@@ -287,6 +297,12 @@ function localizePath (path, lang) {
 	translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 
 	return translatedPath;
+}
+
+
+// Automatic plugin installation if in browser
+if (typeof window !== 'undefined' && window.Vue) {
+	window.Vue.use(LangRouter);
 }
 
 
