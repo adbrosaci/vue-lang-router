@@ -2,6 +2,8 @@ import commonjs from '@rollup/plugin-commonjs'; // Convert CommonJS modules to E
 import vue from 'rollup-plugin-vue'; // Handle .vue SFC files
 import buble from '@rollup/plugin-buble'; // Transpile/polyfill with reasonable browser support
 import banner from 'rollup-plugin-banner'; // Add header to compiled JS files
+import { terser } from 'rollup-plugin-terser'; // Minification
+import cleanup from 'rollup-plugin-cleanup'; // Code cleanup
 
 const path = require('path');
 
@@ -37,6 +39,14 @@ export default {
 			exports: 'named',
 			globals,
 		},
+		{
+			file: 'dist/lang-router.min.js',
+			format: 'iife',
+			name: 'LangRouter',
+			exports: 'named',
+			globals,
+			plugins: [terser()]
+		}
 	],
 	plugins: [
 		commonjs(),
@@ -47,6 +57,11 @@ export default {
 		buble(), // Transpile to ES5
 		banner({
 			file: path.join(__dirname, 'rollup.banner.txt'),
+		}),
+		cleanup({
+			comments: 'none',
+			sourcemap: false,
+			maxEmptyLines: 0
 		}),
 	],
 };
