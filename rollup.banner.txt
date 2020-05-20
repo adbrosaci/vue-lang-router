@@ -1,0 +1,3 @@
+vue-lang-router v<%= pkg.version %>
+(c) 2020 <%= pkg.author.name %>
+Released under the <%= pkg.license %> License.

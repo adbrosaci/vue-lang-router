@@ -1,3 +1,9 @@
+/**
+ * vue-lang-router v0.1.1
+ * (c) 2020 Radek Altof
+ * Released under the MIT License.
+ */
+
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue-i18n'), require('vue-router'), require('vue')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'vue-i18n', 'vue-router', 'vue'], factory) :

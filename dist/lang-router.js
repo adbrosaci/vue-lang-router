@@ -1,3 +1,9 @@
+/**
+ * vue-lang-router v0.1.1
+ * (c) 2020 Radek Altof
+ * Released under the MIT License.
+ */
+
 var LangRouter = (function (exports, VueI18n, VueRouter, vue) {
 	'use strict';
 

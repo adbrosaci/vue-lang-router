@@ -1,6 +1,9 @@
 import commonjs from '@rollup/plugin-commonjs'; // Convert CommonJS modules to ES6
 import vue from 'rollup-plugin-vue'; // Handle .vue SFC files
 import buble from '@rollup/plugin-buble'; // Transpile/polyfill with reasonable browser support
+import banner from 'rollup-plugin-banner'; // Add header to compiled JS files
+
+const path = require('path');
 
 const globals = {
 	vue: 'Vue',
@@ -42,5 +45,8 @@ export default {
 			compileTemplate: true, // Explicitly convert template to render function
 		}),
 		buble(), // Transpile to ES5
+		banner({
+			file: path.join(__dirname, 'rollup.banner.txt'),
+		}),
 	],
 };

@@ -1,3 +1,9 @@
+/**
+ * vue-lang-router v0.1.1
+ * (c) 2020 Radek Altof
+ * Released under the MIT License.
+ */
+
 import VueI18n from 'vue-i18n';
 import VueRouter from 'vue-router';
 import { resolveComponent, openBlock, createBlock, mergeProps, withCtx, renderSlot, resolveDynamicComponent } from 'vue';
