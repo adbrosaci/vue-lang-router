@@ -52,7 +52,9 @@ export default {
 		commonjs(),
 		vue({
 			css: true, // Dynamically inject css as a <style> tag
-			compileTemplate: true, // Explicitly convert template to render function
+			template: {
+				isProduction: true, // Force productiom mode
+			},
 		}),
 		buble(), // Transpile to ES5
 		banner({

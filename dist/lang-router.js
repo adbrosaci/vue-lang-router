@@ -4,7 +4,7 @@
  * Released under the MIT License.
  */
 
-var LangRouter = (function (exports, VueI18n, VueRouter, vue) {
+var LangRouter = (function (exports, VueI18n, VueRouter) {
 	'use strict';
 
 	VueI18n = VueI18n && Object.prototype.hasOwnProperty.call(VueI18n, 'default') ? VueI18n['default'] : VueI18n;
@@ -30,21 +30,116 @@ var LangRouter = (function (exports, VueI18n, VueRouter, vue) {
 		},
 	};
 
-	function render(_ctx, _cache) {
-	  var _component_router_link = vue.resolveComponent("router-link");
-
-	  return (vue.openBlock(), vue.createBlock(_component_router_link, vue.mergeProps({
-	    to: _ctx.localizedTo()
-	  }, _ctx.$attrs), {
-	    default: vue.withCtx(function () { return [
-	      vue.renderSlot(_ctx.$slots, "default")
-	    ]; }),
-	    _: 1
-	  }, 16 /* FULL_PROPS */, ["to"]))
+	function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+	    if (typeof shadowMode !== 'boolean') {
+	        createInjectorSSR = createInjector;
+	        createInjector = shadowMode;
+	        shadowMode = false;
+	    }
+	    // Vue.extend constructor export interop.
+	    var options = typeof script === 'function' ? script.options : script;
+	    // render functions
+	    if (template && template.render) {
+	        options.render = template.render;
+	        options.staticRenderFns = template.staticRenderFns;
+	        options._compiled = true;
+	        // functional template
+	        if (isFunctionalTemplate) {
+	            options.functional = true;
+	        }
+	    }
+	    // scopedId
+	    if (scopeId) {
+	        options._scopeId = scopeId;
+	    }
+	    var hook;
+	    if (moduleIdentifier) {
+	        // server build
+	        hook = function (context) {
+	            // 2.3 injection
+	            context =
+	                context || // cached call
+	                    (this.$vnode && this.$vnode.ssrContext) || // stateful
+	                    (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext); // functional
+	            // 2.2 with runInNewContext: true
+	            if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+	                context = __VUE_SSR_CONTEXT__;
+	            }
+	            // inject component styles
+	            if (style) {
+	                style.call(this, createInjectorSSR(context));
+	            }
+	            // register component module identifier for async chunk inference
+	            if (context && context._registeredComponents) {
+	                context._registeredComponents.add(moduleIdentifier);
+	            }
+	        };
+	        // used by ssr in case component is cached and beforeCreate
+	        // never gets called
+	        options._ssrRegister = hook;
+	    }
+	    else if (style) {
+	        hook = shadowMode
+	            ? function (context) {
+	                style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
+	            }
+	            : function (context) {
+	                style.call(this, createInjector(context));
+	            };
+	    }
+	    if (hook) {
+	        if (options.functional) {
+	            // register for functional component in vue file
+	            var originalRender = options.render;
+	            options.render = function renderWithStyleInjection(h, context) {
+	                hook.call(context);
+	                return originalRender(h, context);
+	            };
+	        }
+	        else {
+	            // inject component registration as beforeCreate hook
+	            var existing = options.beforeCreate;
+	            options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+	        }
+	    }
+	    return script;
 	}
 
-	script.render = render;
-	script.__file = "src/plugin/components/LocalizedLink.vue";
+	/* script */
+	var __vue_script__ = script;
+
+	/* template */
+	var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('router-link',_vm._b({attrs:{"to":_vm.localizedTo()}},'router-link',_vm.$attrs,false),[_vm._t("default")],2)};
+	var __vue_staticRenderFns__ = [];
+
+	  /* style */
+	  var __vue_inject_styles__ = undefined;
+	  /* scoped */
+	  var __vue_scope_id__ = undefined;
+	  /* module identifier */
+	  var __vue_module_identifier__ = undefined;
+	  /* functional template */
+	  var __vue_is_functional_template__ = false;
+	  /* style inject */
+	  
+	  /* style inject SSR */
+	  
+	  /* style inject shadow dom */
+	  
+
+	  
+	  var __vue_component__ = /*#__PURE__*/normalizeComponent(
+	    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+	    __vue_inject_styles__,
+	    __vue_script__,
+	    __vue_scope_id__,
+	    __vue_is_functional_template__,
+	    __vue_module_identifier__,
+	    false,
+	    undefined,
+	    undefined,
+	    undefined
+	  );
 
 	var script$1 = {
 		name: 'LanguageSwitcher',
@@ -83,19 +178,41 @@ var LangRouter = (function (exports, VueI18n, VueRouter, vue) {
 		},
 	};
 
-	function render$1(_ctx, _cache) {
-	  return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.getTag()), { class: "router-language-switcher" }, {
-	    default: vue.withCtx(function () { return [
-	      vue.renderSlot(_ctx.$slots, "default", {
-	        links: _ctx.getLinks()
-	      })
-	    ]; }),
-	    _: 1
-	  }))
-	}
+	/* script */
+	var __vue_script__$1 = script$1;
 
-	script$1.render = render$1;
-	script$1.__file = "src/plugin/components/LanguageSwitcher.vue";
+	/* template */
+	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c(_vm.getTag(),{tag:"component",staticClass:"router-language-switcher"},[_vm._t("default",null,{"links":_vm.getLinks()})],2)};
+	var __vue_staticRenderFns__$1 = [];
+
+	  /* style */
+	  var __vue_inject_styles__$1 = undefined;
+	  /* scoped */
+	  var __vue_scope_id__$1 = undefined;
+	  /* module identifier */
+	  var __vue_module_identifier__$1 = undefined;
+	  /* functional template */
+	  var __vue_is_functional_template__$1 = false;
+	  /* style inject */
+	  
+	  /* style inject SSR */
+	  
+	  /* style inject shadow dom */
+	  
+
+	  
+	  var __vue_component__$1 = /*#__PURE__*/normalizeComponent(
+	    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
+	    __vue_inject_styles__$1,
+	    __vue_script__$1,
+	    __vue_scope_id__$1,
+	    __vue_is_functional_template__$1,
+	    __vue_module_identifier__$1,
+	    false,
+	    undefined,
+	    undefined,
+	    undefined
+	  );
 
 	var defaultLanguage, translations, localizedURLs;
 	var loadedTranslations = [];
@@ -149,8 +266,8 @@ var LangRouter = (function (exports, VueI18n, VueRouter, vue) {
 		});
 		Vue.prototype._langRouter = { translations: translations };
 		Vue.prototype.$localizePath = localizePath;
-		Vue.component('localized-link', script);
-		Vue.component('language-switcher', script$1);
+		Vue.component('localized-link', __vue_component__);
+		Vue.component('language-switcher', __vue_component__$1);
 	};
 	function setLanguage (lang) {
 		exports.i18n.locale = lang;
@@ -255,4 +372,4 @@ var LangRouter = (function (exports, VueI18n, VueRouter, vue) {
 
 	return exports;
 
-}({}, VueI18n, VueRouter, Vue));
+}({}, VueI18n, VueRouter));
