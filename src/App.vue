@@ -18,7 +18,7 @@
 			<localized-link :to="{ path: '/about' }">{{ $t('nav.about') }}</localized-link> |
 			<localized-link to="/user/radek-altof">{{ $t('nav.user') }}</localized-link> |
 			<localized-link to="/pos/12/info">{{ $t('pos.info') }}</localized-link> |
-			<localized-link to="/pos/12/manager/bad-motherfucker">{{ $t('pos.manager') }}</localized-link>
+			<localized-link to="/pos/12/manager/Johnny">{{ $t('pos.manager') }}</localized-link>
 		</div>
 		<router-view/>
 	</div>
