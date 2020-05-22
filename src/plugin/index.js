@@ -69,14 +69,14 @@ LangRouter.install = function (Vue, options) {
 	}
 	defaultLanguage = options.defaultLanguage;
 	translations = options.translations;
-	localizedURLs = options.localizedURLs;
+	localizedURLs = options.localizedURLs || {};
 
 	// Check if variables look okay
 	let isArr;
-	if ((isArr = Array.isArray(translations)) || typeof translations !== 'object' || translations === null) {
+	if ((isArr = Array.isArray(translations)) || typeof translations !== 'object') {
 		err('options.translations should be an object, received ' + (isArr ? 'array' : typeof translations) + ' instead.');
 	}
-	if ((isArr = Array.isArray(localizedURLs)) || typeof localizedURLs !== 'object' || localizedURLs === null) {
+	if ((isArr = Array.isArray(localizedURLs)) || typeof localizedURLs !== 'object') {
 		err('options.localizedURLs should be an object, received ' + (isArr ? 'array' : typeof localizedURLs) + ' instead.');
 	}
 	if (typeof defaultLanguage !== 'string') {
