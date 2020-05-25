@@ -1,6 +1,6 @@
 # :compass: &nbsp; Vue Language Router
 
-Vue language routing with (optional) localized URLs.
+Language routing and URL localization made easy.
 
 ![](lang-router.gif)
 
@@ -128,6 +128,8 @@ import cs from './cs.json';
 export default { cs };
 ```
 
+Language router will parse any given path and attempt to localize its segments based on this configuration. If no match is found, the original path segment is retained.
+
 
 #### 3. Modify your router file
 
@@ -185,13 +187,47 @@ To use any translated string, use `$t('stringName')` in your code. For more info
 
 ### Using links
 
-Use `<localized-link>` component. It localizes given path based on current language.
+Use `<localized-link>` component. It localizes given router path based on current language. It's a simple, yet powerful component, which takes a hassle out of generating proper links on your site.
 
-It accepts the same options as `<router-link>`.
+It accepts the same options as [`<router-link>`](https://router.vuejs.org/api/#router-link-props).
 
 ```html
 <localized-link to="/user/john-smith">John Smith</localized-link>
 ```
+
+The above code will generate a link with `href` value depending on various factors. Here are a few examples:
+
+```javascript
+/*
+Default language: "en"
+Current language: "en"
+Localized URLs "en": {}
+Current URL: /
+*/
+
+href="/user/john-smith"
+
+
+/*
+Default language: "en"
+Current language: "en"
+Localized URLs "en": { "user": "u" }
+Current URL: /en/example
+*/
+
+href="/en/u/john-smith"
+
+
+/*
+Default language: "en"
+Current language: "cs"
+Localized URLs "cs": { "user": "uzivatel" }
+Current URL: /
+*/
+
+href="/cs/uzivatel/john-smith"
+```
+
 
 
 ### Switching language
