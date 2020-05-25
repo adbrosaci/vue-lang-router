@@ -48,9 +48,9 @@
   },
   "_id": "vue-lang-router@0.1.1",
   "bugs": {
-    "url": "https://github.com/radek-altof/vue-lang-router/issues"
+    "url": "https://github.com/adbrosaci/vue-lang-router/issues"
   },
-  "homepage": "https://github.com/radek-altof/vue-lang-router#readme",
+  "homepage": "https://github.com/adbrosaci/vue-lang-router#readme",
   "keywords": [
     "vue",
     "router",
@@ -64,6 +64,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/radek-altof/vue-lang-router.git"
+    "url": "git+https://github.com/adbrosaci/vue-lang-router.git"
   }
 }

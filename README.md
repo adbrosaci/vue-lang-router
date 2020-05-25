@@ -2,7 +2,7 @@
 
 Language routing and URL localization made easy.
 
-![](lang-router.gif)
+![](https://raw.githubusercontent.com/adbrosaci/vue-lang-router/master/lang-router.gif)
 
 Built on top of :vertical_traffic_light: [Vue Router](https://router.vuejs.org/) and :globe_with_meridians: [Vue I18n](https://kazupon.github.io/vue-i18n/).
 
@@ -30,7 +30,7 @@ Built on top of :vertical_traffic_light: [Vue Router](https://router.vuejs.org/)
 
 ### Vue CLI plugin (recommended)
 
-The easiest way to install Language Router is using [Vue CLI plugin for Language Router](https://github.com/radek-altof/vue-cli-plugin-lang-router#readme). The plugin will modify your router file, setup translation files and more.
+The easiest way to install Language Router is using [Vue CLI plugin for Language Router](https://github.com/adbrosaci/vue-cli-plugin-lang-router#readme). The plugin will modify your router file, setup translation files and more.
 
 
 ### Manually
