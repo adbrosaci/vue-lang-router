@@ -1,6 +1,6 @@
 {
   "name": "vue-lang-router",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Vue language routing with (optional) localized URLs",
   "main": "dist/lang-router.umd.js",
   "module": "dist/lang-router.esm.js",
