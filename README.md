@@ -1,4 +1,4 @@
-# :compass: &nbsp; Vue Language Router
+# :earth_africa: Vue Language Router
 
 Language routing and URL localization made easy.
 
@@ -14,7 +14,7 @@ Built on top of :vertical_traffic_light: [Vue Router](https://router.vuejs.org/)
 
 :classical_building: Default language (no language prefix in URL)
 
-:child: Supports variables and children in routes
+:baby: Supports variables and children in routes
 
 :car: :bike: Supports both history and hash mode
 
