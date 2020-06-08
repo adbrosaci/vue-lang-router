@@ -45,8 +45,8 @@ export default {
 			name: 'LangRouter',
 			exports: 'named',
 			globals,
-			plugins: [terser()]
-		}
+			plugins: [ terser() ],
+		},
 	],
 	plugins: [
 		commonjs(),
@@ -63,7 +63,7 @@ export default {
 		cleanup({
 			comments: 'none',
 			sourcemap: false,
-			maxEmptyLines: 0
+			maxEmptyLines: 0,
 		}),
 	],
 };
