@@ -9,7 +9,7 @@ import localizedURLs from '../setup/localized-urls';
 
 // Setup
 
-const defaultLanguage = 'cs';
+const defaultLanguage = 'en';
 
 Vue.use(LangRouter, {
 	defaultLanguage,
@@ -65,11 +65,6 @@ describe('LangRouter', () => {
 		]);
 	});
 
-	test('translates path correctly', () => {
-		expect(LangRouter.__get__('translatePath')('/user/:slug/info', 'cs')).toBe('/uzivatel/:slug/detail');
-		expect(LangRouter.__get__('translatePath')('/user/:slug/info', 'ru')).toBe('/user/:slug/informatsiya');
-	});
-
 	test('gets preffered language from browser', () => {
 		Object.defineProperties(window.navigator, {
 			browserLanguage: {
@@ -93,5 +88,32 @@ describe('LangRouter', () => {
 			configurable: true,
 		});
 		expect(LangRouter.__get__('getPrefferedLanguage')()).toBe('cs');
+	});
+
+	test('localizes path correctly', () => {
+		const vueMock = {
+			$router: {
+				currentRoute: {
+					path: '/about'
+				}
+			}
+		};
+		const localizePath = (path, lang) => {
+			return LangRouter.__get__('localizePath').call(vueMock, path, lang);
+		}
+		
+		expect(localizePath('/about', 'ru')).toBe('/ru/about');
+		expect(localizePath('/cs/o-nas', 'en')).toBe('/en/about-replaced');
+		expect(localizePath('/cs/o-nas', 'cs')).toBe('/cs/o-nas');
+
+		expect(localizePath('/user/2/info', 'ru')).toBe('/ru/user/2/informatsiya');
+		expect(localizePath('/user/john-smith', 'en')).toBe('/user/john-smith');
+		expect(localizePath('/user/john-smith', 'cs')).toBe('/cs/uzivatel/john-smith');
+		expect(localizePath('/ru/user/6/informatsiya', 'cs')).toBe('/cs/uzivatel/6/detail');
+
+		expect(localizePath('/cs/jina-cesta/detail', 'en')).toBe('/en/jina-cesta/info');
+		expect(localizePath('/cs/jina-cesta/detail', 'ru')).toBe('/ru/jina-cesta/informatsiya');
+
+		expect(localizePath('/ru/user/should-not-be-replaced/informatsiya', 'cs')).toBe('/cs/uzivatel/should-not-be-replaced/detail');
 	});
 });
