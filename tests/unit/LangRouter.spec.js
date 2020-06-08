@@ -2,8 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import LangRouter from '@/plugin';
 
-import translations from '@/lang/translations';
-import localizedURLs from '@/lang/localized-urls';
+import routes from '../setup/routes';
+import translations from '../setup/translations';
+import localizedURLs from '../setup/localized-urls';
 
 
 // Setup
@@ -15,14 +16,6 @@ Vue.use(LangRouter, {
 	translations,
 	localizedURLs,
 });
-
-const routes = [
-	{
-		path: '/about',
-		name: 'About page',
-		component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue'),
-	},
-];
 
 const router = new LangRouter({
 	routes,
@@ -55,4 +48,50 @@ describe('LangRouter', () => {
 		expect(router).toBeInstanceOf(VueRouter);
 	});
 
+	test('generates correct router aliases', () => {
+		expect(routes[0].alias).toEqual([
+			'/en/about-replaced',
+			'/cs/o-nas',
+			'/ru/about',
+		]);
+		expect(routes[1].alias).toEqual([
+			'/en/user/:slug',
+			'/cs/uzivatel/:slug',
+			'/ru/user/:slug',
+		]);
+		expect(routes[1].children[0].alias).toEqual([
+			'detail',
+			'informatsiya',
+		]);
+	});
+
+	test('translates path correctly', () => {
+		expect(LangRouter.__get__('translatePath')('/user/:slug/info', 'cs')).toBe('/uzivatel/:slug/detail');
+		expect(LangRouter.__get__('translatePath')('/user/:slug/info', 'ru')).toBe('/user/:slug/informatsiya');
+	});
+
+	test('gets preffered language from browser', () => {
+		Object.defineProperties(window.navigator, {
+			browserLanguage: {
+				value: 'ru',
+			},
+			language: {
+				value: undefined,
+			},
+			languages: {
+				value: null,
+				configurable: true,
+			},
+		});
+		expect(LangRouter.__get__('getPrefferedLanguage')()).toBe('ru');
+
+		Object.defineProperty(window.navigator, 'languages', {
+			value: [
+				'cs-CZ',
+				'en-US',
+			],
+			configurable: true,
+		});
+		expect(LangRouter.__get__('getPrefferedLanguage')()).toBe('cs');
+	});
 });
