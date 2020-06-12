@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v1.0.1
+ * vue-lang-router v1.0.2
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
@@ -322,16 +322,19 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 			return next();
 		});
 	}
-	function translatePath (path, langTo, langFrom) {
+	function translatePath (path, langTo, langFrom, matchedPath) {
 		var pathChunks = path.split('/');
 		if (langFrom && localizedURLs[langFrom]) {
+			if (langTo == langFrom) { return path; }
 			var map = localizedURLs[langFrom];
 			var reversedMap = {};
 			Object.keys(map).forEach(function (key) {
 				reversedMap[map[key]] = key;
 			});
+			var matchedPathChunks = matchedPath.split('/');
 			for (var i = 0; i < pathChunks.length; i++) {
 				var pathChunk = pathChunks[i];
+				if (matchedPathChunks[i].charAt(0) == ':') { continue; }
 				pathChunks[i] = reversedMap[pathChunk] || pathChunk;
 			}
 		}
@@ -351,16 +354,24 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 	}
 	function localizePath (path, lang) {
 		if (!lang || !localizedURLs[lang]) { lang = exports.i18n.locale; }
-		var pathLang = false;
 		var pathChunks = path.split('/');
-		if (localizedURLs[pathChunks[1]]) {
-			pathLang = pathChunks[1];
+		var pathLang = (localizedURLs[pathChunks[1]] ? pathChunks[1] : false);
+		var currentPathLang = this.$router.currentRoute.path.split('/')[1];
+		if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
+		var resolvedPath = false;
+		if (pathLang) {
+			var resolvedRoute = this.$router.resolve(path);
+			if (resolvedRoute.route.matched.length != 0) {
+				resolvedPath = resolvedRoute.route.matched[resolvedRoute.route.matched.length - 1].path;
+				resolvedPath = (resolvedPath.charAt(0) == '/' ? resolvedPath : '/' + resolvedPath);
+			}
+			else {
+				err('Router could not resolve path "' + path + '". URL localization may not work as expected.');
+			}
 			pathChunks.splice(1, 1);
 			path = pathChunks.join('/');
 		}
-		var currentPathLang = this.$router.currentRoute.path.split('/')[1];
-		if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
-		var translatedPath = translatePath(path, lang, pathLang);
+		var translatedPath = translatePath(path, lang, pathLang, (resolvedPath || path));
 		translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 		return translatedPath;
 	}
