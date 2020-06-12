@@ -92,27 +92,30 @@ describe('LangRouter', () => {
 
 	test('localizes path correctly', () => {
 		const vueMock = {
-			$router: {
-				currentRoute: {
-					path: '/about'
-				}
-			}
+			$router: router,
 		};
 		const localizePath = (path, lang) => {
 			return LangRouter.__get__('localizePath').call(vueMock, path, lang);
-		}
-		
+		};
+
 		expect(localizePath('/about', 'ru')).toBe('/ru/about');
 		expect(localizePath('/cs/o-nas', 'en')).toBe('/en/about-replaced');
 		expect(localizePath('/cs/o-nas', 'cs')).toBe('/cs/o-nas');
+		expect(localizePath('/en/about-replaced', 'en')).toBe('/en/about-replaced');
 
 		expect(localizePath('/user/2/info', 'ru')).toBe('/ru/user/2/informatsiya');
 		expect(localizePath('/user/john-smith', 'en')).toBe('/user/john-smith');
 		expect(localizePath('/user/john-smith', 'cs')).toBe('/cs/uzivatel/john-smith');
 		expect(localizePath('/ru/user/6/informatsiya', 'cs')).toBe('/cs/uzivatel/6/detail');
 
-		expect(localizePath('/cs/jina-cesta/detail', 'en')).toBe('/en/jina-cesta/info');
-		expect(localizePath('/cs/jina-cesta/detail', 'ru')).toBe('/ru/jina-cesta/informatsiya');
+		const originalConsoleError = console.error;
+		console.error = jest.fn();
+
+		expect(localizePath('/cs/undefined-path/detail', 'en')).toBe('/en/undefined-path/info');
+		expect(localizePath('/cs/undefined-path/detail', 'ru')).toBe('/ru/undefined-path/informatsiya');
+		expect(console.error).toHaveBeenCalledTimes(2);
+
+		console.error = originalConsoleError;
 
 		expect(localizePath('/ru/user/should-not-be-replaced/informatsiya', 'cs')).toBe('/cs/uzivatel/should-not-be-replaced/detail');
 	});
