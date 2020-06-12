@@ -210,13 +210,16 @@ function switchLanguage (to, from, next) {
 
 
 // Path translation
-function translatePath (path, langTo, langFrom) {
+function translatePath (path, langTo, langFrom, matchedPath) {
 
 	// Split the path into chunks
 	let pathChunks = path.split('/');
 
 	// If the path is in some language already
 	if (langFrom && localizedURLs[langFrom]) {
+
+		// If the path language & the desired language are equal, do not translate
+		if (langTo == langFrom) { return path; }
 
 		// Create reversed map of localized URLs in given language
 		const map = localizedURLs[langFrom];
@@ -225,9 +228,15 @@ function translatePath (path, langTo, langFrom) {
 			reversedMap[map[key]] = key;
 		});
 
+		// Split the matched path into chunks
+		let matchedPathChunks = matchedPath.split('/');
+
 		// Translate the path back to original path names
 		for (let i = 0; i < pathChunks.length; i++) {
 			let pathChunk = pathChunks[i];
+
+			// If the original path chunk is a variable, do not translate it
+			if (matchedPathChunks[i].charAt(0) == ':') { continue; }
 
 			// If there is an alias, use it, otherwise use given path
 			pathChunks[i] = reversedMap[pathChunk] || pathChunk;
@@ -268,20 +277,14 @@ function getPrefferedLanguage () {
 
 // Path localization
 function localizePath (path, lang) {
-
 	// If the desired language is not defined or it doesn't exist, use current one
 	if (!lang || !localizedURLs[lang]) { lang = i18n.locale; }
 
 	// Split path into chunks
-	let pathLang = false;
 	const pathChunks = path.split('/');
 
-	// If the path is in some language, remove it from path and indicate it for translation
-	if (localizedURLs[pathChunks[1]]) {
-		pathLang = pathChunks[1];
-		pathChunks.splice(1, 1);
-		path = pathChunks.join('/');
-	}
+	// Get the path language, if there is any
+	let pathLang = (localizedURLs[pathChunks[1]] ? pathChunks[1] : false);
 
 	// If the language is default language
 	// & current path doesn't contain a language
@@ -290,8 +293,27 @@ function localizePath (path, lang) {
 	const currentPathLang = this.$router.currentRoute.path.split('/')[1];
 	if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
 
+	// If the path is in some language already
+	let resolvedPath = false;
+	if (pathLang) {
+		// Get the original path
+		const resolvedRoute = this.$router.resolve(path);
+
+		if (resolvedRoute.route.matched.length != 0) {
+			resolvedPath = resolvedRoute.route.matched[resolvedRoute.route.matched.length - 1].path;
+			resolvedPath = (resolvedPath.charAt(0) == '/' ? resolvedPath : '/' + resolvedPath);
+		}
+		else {
+			err('Router could not resolve path "' + path + '". URL localization may not work as expected.');
+		}
+
+		// Remove the language from path
+		pathChunks.splice(1, 1);
+		path = pathChunks.join('/');
+	}
+
 	// Translate path
-	let translatedPath = translatePath(path, lang, pathLang);
+	let translatedPath = translatePath(path, lang, pathLang, (resolvedPath || path));
 
 	// Add language prefix to the path
 	translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
