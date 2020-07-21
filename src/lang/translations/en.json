@@ -6,9 +6,6 @@
 	},
 	"hello": "Hello, sunshine!",
 	"content": "This is content",
-	"about": {
-		"content": "This is an about page"
-	},
 	"user-slug": "User in URL is: ",
 	"pos": {
 		"info": "Branch info",

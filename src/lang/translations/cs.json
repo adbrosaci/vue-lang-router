@@ -6,9 +6,6 @@
 	},
 	"hello": "Čus bejku!",
 	"content": "Tohle je obsah",
-	"about": {
-		"content": "Tohle je stránka O nás"
-	},
 	"user-slug": "Uživatel v URL je: ",
 	"pos": {
 		"info": "Informace o pobočce",

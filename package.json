@@ -27,6 +27,7 @@
     "vue-router": "^3.1.6"
   },
   "devDependencies": {
+    "@kazupon/vue-i18n-loader": "^0.5.0",
     "@radek-altof/lint-config": "^1.0.3",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^11.1.0",
