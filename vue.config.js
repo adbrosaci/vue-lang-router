@@ -1,5 +1,4 @@
 const StyleLintPlugin = require('stylelint-webpack-plugin');
-const path = require('path');
 
 module.exports = {
 	configureWebpack: {
@@ -9,12 +8,6 @@ module.exports = {
 				fix: true,
 			}),
 		],
-		resolve: {
-			alias: {
-				'@lang': path.resolve(__dirname, './src/lang'),
-			},
-			extensions: [ '.js', '.json' ],
-		},
 	},
 	runtimeCompiler: true,
 	chainWebpack: config => {
