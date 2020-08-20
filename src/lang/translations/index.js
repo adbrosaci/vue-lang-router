@@ -1,7 +1,9 @@
+import en from './en.json';
+
 export default {
 	en: {
 		name: 'English',
-		load: () => { return import('./en.json'); },
+		messages: en,
 	},
 	cs: {
 		name: 'Česky',

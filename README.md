@@ -56,7 +56,7 @@ src
         └── index.js
 ```
 
-Create `JSON` files for all desired languages and reference them in `index.js`. Translations are loaded on demand.
+Create `JSON` files for all desired languages and reference them in `index.js`. Translations are loaded on demand. 
 
 ```javascript
 /*  src/lang/translations/en.json  */
@@ -95,6 +95,18 @@ export default {
 };
 ```
 
+In case you do not want to load translations asynchronously, you can provide `messages` object with translations instead of `load` function. For example:
+
+```javascript
+export default {
+  en: {
+    name: 'English',
+    messages: {
+      hello: 'Hello!',
+    },
+  },
+};
+```
 
 #### 3. Create localized URLs in your app.
 

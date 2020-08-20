@@ -87,11 +87,25 @@ LangRouter.install = function (Vue, options) {
 	Vue.use(VueI18n);
 	Vue.use(VueRouter);
 
+	// Check if any translations are already present, if yes, pass them to VueI18n
+	let messages = {};
+
+	for (let lang in translations) {
+		if (translations.hasOwnProperty(lang)) {
+			let langMessages = translations[lang].messages;
+
+			if (typeof langMessages === 'object' && !Array.isArray(langMessages)) {
+				messages[lang] = translations[lang].messages;
+				loadedTranslations.push(lang);
+			}
+		}
+	}
+
 	// Init internalization plugin
 	i18n = new VueI18n({
 		locale: defaultLanguage,
 		fallbackLocale: defaultLanguage,
-		messages: {},
+		messages,
 	});
 
 	// Add translations to use in <language-switcher>

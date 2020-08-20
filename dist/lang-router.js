@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v1.0.2
+ * vue-lang-router v1.1.0
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
@@ -259,10 +259,20 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 		}
 		Vue.use(VueI18n);
 		Vue.use(VueRouter);
+		var messages = {};
+		for (var lang in translations) {
+			if (translations.hasOwnProperty(lang)) {
+				var langMessages = translations[lang].messages;
+				if (typeof langMessages === 'object' && !Array.isArray(langMessages)) {
+					messages[lang] = translations[lang].messages;
+					loadedTranslations.push(lang);
+				}
+			}
+		}
 		exports.i18n = new VueI18n({
 			locale: defaultLanguage,
 			fallbackLocale: defaultLanguage,
-			messages: {},
+			messages: messages,
 		});
 		Vue.prototype._langRouter = { translations: translations };
 		Vue.prototype.$localizePath = localizePath;
