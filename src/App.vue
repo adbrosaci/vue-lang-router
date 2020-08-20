@@ -30,13 +30,13 @@ html {
 }
 
 #app {
-	text-align: center;
 	font-size: 16px;
+	text-align: center;
 }
 
 h1 {
-	font-size: 30px;
 	margin: 20px;
+	font-size: 30px;
 }
 
 #nav {
@@ -46,7 +46,8 @@ h1 {
 		color: #2c3e50;
 		text-decoration: none;
 
-		&:hover, &:focus {
+		&:hover,
+		&:focus {
 			text-decoration: underline;
 		}
 		&.router-link-exact-active {
@@ -67,16 +68,16 @@ h1 {
 	img {
 		width: 24px;
 		height: 24px;
-		vertical-align: middle;
 		margin-right: 5px;
+		vertical-align: middle;
 	}
 	span {
 		vertical-align: middle;
 	}
 	li {
 		width: 40px;
-		line-height: 16px;
 		margin: 0 auto 10px;
+		line-height: 16px;
 
 		&.dotted-border {
 			outline: 1px dotted #42b983;
