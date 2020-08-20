@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "core-js": "^3.6.4",
-    "rollup-plugin-vue": "^5.1.7",
     "vue": "^2.6.11",
     "vue-i18n": "^8.16.0",
     "vue-router": "^3.1.6"
@@ -47,6 +46,7 @@
     "rollup-plugin-banner": "^0.2.1",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-vue": "^5.1.7",
     "sass-loader": "^8.0.2",
     "stylelint": "^13.4.0",
     "stylelint-webpack-plugin": "^2.0.0",
