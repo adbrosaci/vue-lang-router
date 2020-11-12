@@ -212,7 +212,7 @@ function switchLanguage (to, from, next) {
 			// Add language prefix to the path
 			translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 
-			return next(translatedPath);
+			return next({path: translatedPath, query: to.query});
 		}
 	}
 
