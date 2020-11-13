@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v1.1.0
+ * vue-lang-router v1.2.0
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
@@ -148,7 +148,7 @@
 		name: 'LanguageSwitcher',
 		data: function data () {
 			return {
-				currentUrl: this.url || this.$router.currentRoute.path,
+				currentUrl: this.url || this.$router.currentRoute.fullPath,
 			};
 		},
 		props: [ 'tag', 'active-class', 'url' ],
@@ -176,7 +176,7 @@
 		},
 		watch: {
 			$route: function $route (to) {
-				this.currentUrl = this.url || to.path;
+				this.currentUrl = this.url || to.fullPath;
 			},
 		},
 	};
@@ -328,7 +328,7 @@
 			if (lang != defaultLanguage) {
 				var translatedPath = translatePath(to.path, lang);
 				translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
-				return next(translatedPath);
+				return next({ path: translatedPath, query: to.query, hash: to.hash });
 			}
 		}
 		loadLanguage(lang).then(function () {
@@ -365,12 +365,22 @@
 		if (navigator.languages && navigator.languages.length) { return extractLanguage(navigator.languages[0] || ''); }
 		return extractLanguage(navigator.language || navigator.browserLanguage || navigator.userLanguage || '');
 	}
-	function localizePath (path, lang) {
+	function localizePath (fullPath, lang) {
 		if (!lang || !localizedURLs[lang]) { lang = exports.i18n.locale; }
+		var path = fullPath;
+		var query = '';
+		if (fullPath.includes('?')) {
+			path = fullPath.split('?')[0];
+			query = '?' + fullPath.split('?')[1];
+		}
+		else if (fullPath.includes('#')) {
+			path = fullPath.split('#')[0];
+			query = '#' + fullPath.split('#')[1];
+		}
 		var pathChunks = path.split('/');
 		var pathLang = (localizedURLs[pathChunks[1]] ? pathChunks[1] : false);
 		var currentPathLang = this.$router.currentRoute.path.split('/')[1];
-		if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
+		if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return fullPath; }
 		var resolvedPath = false;
 		if (pathLang) {
 			var resolvedRoute = this.$router.resolve(path);
@@ -386,7 +396,7 @@
 		}
 		var translatedPath = translatePath(path, lang, pathLang, (resolvedPath || path));
 		translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
-		return translatedPath;
+		return translatedPath + query;
 	}
 	if (typeof window !== 'undefined' && window.Vue) {
 		window.Vue.use(LangRouter);
