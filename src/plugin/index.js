@@ -212,7 +212,7 @@ function switchLanguage (to, from, next) {
 			// Add language prefix to the path
 			translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 
-			return next({path: translatedPath, query: to.query});
+			return next({ path: translatedPath, query: to.query, hash: to.hash });
 		}
 	}
 
@@ -290,9 +290,22 @@ function getPrefferedLanguage () {
 
 
 // Path localization
-function localizePath (path, lang) {
+function localizePath (fullPath, lang) {
 	// If the desired language is not defined or it doesn't exist, use current one
 	if (!lang || !localizedURLs[lang]) { lang = i18n.locale; }
+
+	// Separate path & query
+	let path = fullPath;
+	let query = '';
+
+	if (fullPath.includes('?')) {
+		path = fullPath.split('?')[0];
+		query = '?' + fullPath.split('?')[1];
+	}
+	else if (fullPath.includes('#')) {
+		path = fullPath.split('#')[0];
+		query = '#' + fullPath.split('#')[1];
+	}
 
 	// Split path into chunks
 	const pathChunks = path.split('/');
@@ -305,7 +318,7 @@ function localizePath (path, lang) {
 	// & path to translate doesn't contain a language
 	// = no need to localize
 	const currentPathLang = this.$router.currentRoute.path.split('/')[1];
-	if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return path; }
+	if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return fullPath; }
 
 	// If the path is in some language already
 	let resolvedPath = false;
@@ -332,7 +345,7 @@ function localizePath (path, lang) {
 	// Add language prefix to the path
 	translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 
-	return translatedPath;
+	return translatedPath + query;
 }
 
 

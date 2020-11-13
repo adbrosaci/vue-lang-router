@@ -11,7 +11,7 @@ export default {
 	name: 'LanguageSwitcher',
 	data () {
 		return {
-			currentUrl: this.url || this.$router.currentRoute.path,
+			currentUrl: this.url || this.$router.currentRoute.fullPath,
 		};
 	},
 	props: [ 'tag', 'active-class', 'url' ],
@@ -41,7 +41,7 @@ export default {
 	},
 	watch: {
 		$route (to) {
-			this.currentUrl = this.url || to.path;
+			this.currentUrl = this.url || to.fullPath;
 		},
 	},
 };
