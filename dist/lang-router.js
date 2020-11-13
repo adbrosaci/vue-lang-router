@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v1.2.0
+ * vue-lang-router v1.2.1
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
@@ -146,6 +146,7 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 		data: function data () {
 			return {
 				currentUrl: this.url || this.$router.currentRoute.fullPath,
+				links: [],
 			};
 		},
 		props: [ 'tag', 'active-class', 'url' ],
@@ -154,7 +155,7 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 				if (this.tag) { return this.tag; }
 				else { return 'div'; }
 			},
-			getLinks: function getLinks () {
+			generateLinks: function generateLinks () {
 				var links = [];
 				var activeClass = this.activeClass || 'router-active-language';
 				var tr = this._langRouter.translations;
@@ -168,12 +169,13 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 						});
 					}
 				}
-				return links;
+				this.links = links;
 			},
 		},
 		watch: {
 			$route: function $route (to) {
 				this.currentUrl = this.url || to.fullPath;
+				this.generateLinks();
 			},
 		},
 	};
@@ -182,7 +184,7 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 	var __vue_script__$1 = script$1;
 
 	/* template */
-	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c(_vm.getTag(),{tag:"component",staticClass:"router-language-switcher"},[_vm._t("default",null,{"links":_vm.getLinks()})],2)};
+	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c(_vm.getTag(),{tag:"component",staticClass:"router-language-switcher"},[_vm._t("default",null,{"links":_vm.links})],2)};
 	var __vue_staticRenderFns__$1 = [];
 
 	  /* style */
