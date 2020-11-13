@@ -119,4 +119,22 @@ describe('LangRouter', () => {
 
 		expect(localizePath('/ru/user/should-not-be-replaced/informatsiya', 'cs')).toBe('/cs/uzivatel/should-not-be-replaced/detail');
 	});
+
+	test('localizes path with query correctly', () => {
+		const vueMock = {
+			$router: router,
+		};
+		const localizePath = (path, lang) => {
+			return LangRouter.__get__('localizePath').call(vueMock, path, lang);
+		};
+
+		expect(localizePath('/about/?q=test', 'ru')).toBe('/ru/about/?q=test');
+		expect(localizePath('/cs/o-nas?q=test', 'en')).toBe('/en/about-replaced?q=test');
+
+		expect(localizePath('/about/#hash', 'ru')).toBe('/ru/about/#hash');
+		expect(localizePath('/cs/o-nas#hash', 'en')).toBe('/en/about-replaced#hash');
+
+		expect(localizePath('/about/?q=test#hash', 'ru')).toBe('/ru/about/?q=test#hash');
+		expect(localizePath('/cs/o-nas?q=test#hash', 'en')).toBe('/en/about-replaced?q=test#hash');
+	});
 });
