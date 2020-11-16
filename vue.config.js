@@ -14,6 +14,6 @@ module.exports = {
 		config.module.rule('eslint').use('eslint-loader').options({
 			fix: true,
 		});
-		config.module.rule('i18n').resourceQuery(/blockType=i18n/).type('javascript/auto').use('i18n').loader('@kazupon/vue-i18n-loader').end();
+		config.module.rule('i18n').resourceQuery(/blockType=i18n/).type('javascript/auto').use('i18n').loader('@intlify/vue-i18n-loader').end();
 	},
 };

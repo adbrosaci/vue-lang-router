@@ -1,5 +1,6 @@
-import VueI18n from 'vue-i18n';
-import VueRouter from 'vue-router';
+import { createI18n } from 'vue-i18n';
+import { createRouter } from 'vue-router';
+export * from 'vue-router';
 
 import LocalizedLink from './components/LocalizedLink.vue';
 import LanguageSwitcher from './components/LanguageSwitcher.vue';
@@ -7,6 +8,7 @@ import LanguageSwitcher from './components/LanguageSwitcher.vue';
 
 // Define vars
 let defaultLanguage, translations, localizedURLs, i18n;
+let isInstalled = false;
 
 
 // Array of loaded translations
@@ -20,48 +22,46 @@ function err (msg, error) {
 }
 
 
-// LangRouter class adds localized URL functionality to Vue Router
-export default class LangRouter {
+// LangRouter adds localized URL functionality to Vue Router
+function createLangRouter (routerOptions, languageOptions) {
 
-	// Called when instantiated
-	constructor (options) {
+	// Setup language configuration
+	setupLanguageConfig(languageOptions);
 
-		// If any language is missing from localized URLs, add it as an empty object
-		// All aliases need to be created for language switching purposes
-		for (let lang in translations) {
-			if (translations.hasOwnProperty(lang) && !localizedURLs[lang]) {
-				localizedURLs[lang] = {};
-			}
+	// If any language is missing from localized URLs, add it as an empty object
+	// All aliases need to be created for language switching purposes
+	for (let lang in translations) {
+		if (translations.hasOwnProperty(lang) && !localizedURLs[lang]) {
+			localizedURLs[lang] = {};
 		}
-
-		// Cycle through all the available languages and add aliases to routes
-		for (let lang in localizedURLs) {
-			if (localizedURLs.hasOwnProperty(lang)) {
-				addAliasesToRoutes(options.routes, lang);
-			}
-		}
-
-		// Create Vue Router instance
-		const router = new VueRouter(options);
-
-		// Add language switching logic
-		router.beforeEach(switchLanguage);
-
-		// Return Vue Router instance
-		return router;
 	}
+
+	// Cycle through all the available languages and add aliases to routes
+	for (let lang in localizedURLs) {
+		if (localizedURLs.hasOwnProperty(lang)) {
+			addAliasesToRoutes(routerOptions.routes, lang);
+		}
+	}
+
+	// Create Vue Router
+	const router = createRouter(routerOptions);
+
+	// Add language switching logic
+	router.beforeEach(switchLanguage);
+
+	// Append Lang Router install method to Vue Router install method
+	const installRouter = router.install;
+	router.install = function (app, options) {
+		installRouter(app, options);
+		installLangRouter(app);
+	};
+
+	// Return Vue Router
+	return router;
 }
 
 
-// Install method of the LangRouter plugin
-LangRouter.install = function (Vue, options) {
-
-	// Check if plugin is installed already
-	if (LangRouter.installed) {
-		err('Already installed.');
-		return;
-	}
-	LangRouter.installed = true;
+function setupLanguageConfig (options) {
 
 	// Get the options
 	if (!options) {
@@ -83,10 +83,6 @@ LangRouter.install = function (Vue, options) {
 		err('options.defaultLanguage should be a string, received ' + typeof defaultLanguage + ' instead.');
 	}
 
-	// Register plugins
-	Vue.use(VueI18n);
-	Vue.use(VueRouter);
-
 	// Check if any translations are already present, if yes, pass them to VueI18n
 	let messages = {};
 
@@ -102,22 +98,34 @@ LangRouter.install = function (Vue, options) {
 	}
 
 	// Init internalization plugin
-	i18n = new VueI18n({
+	i18n = createI18n({
 		locale: defaultLanguage,
 		fallbackLocale: defaultLanguage,
 		messages,
 	});
+}
+
+
+// Install method of the LangRouter plugin
+function installLangRouter (app) {
+
+	// Check if plugin is installed already
+	if (isInstalled) {
+		err('Already installed.');
+		return;
+	}
+	isInstalled = true;
 
 	// Add translations to use in <language-switcher>
-	Vue.prototype._langRouter = { translations };
+	app.config.globalProperties._langRouter = { translations };
 
 	// Add $localizePath method to return localized path
-	Vue.prototype.$localizePath = localizePath;
+	app.config.globalProperties.$localizePath = localizePath;
 
 	// Register components
-	Vue.component('localized-link', LocalizedLink);
-	Vue.component('language-switcher', LanguageSwitcher);
-};
+	app.component('localized-link', LocalizedLink);
+	app.component('language-switcher', LanguageSwitcher);
+}
 
 
 // Switching to a loaded language
@@ -350,10 +358,10 @@ function localizePath (fullPath, lang) {
 
 
 // Automatic plugin installation if in browser
-if (typeof window !== 'undefined' && window.Vue) {
+/* if (typeof window !== 'undefined' && window.Vue) {
 	window.Vue.use(LangRouter);
-}
+} */
 
 
 // Export what's needed
-export { i18n };
+export { createLangRouter, i18n };
