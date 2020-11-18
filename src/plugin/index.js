@@ -99,6 +99,7 @@ function setupLanguageConfig (options) {
 
 	// Init internalization plugin
 	i18n = createI18n({
+		legacy: true,
 		locale: defaultLanguage,
 		fallbackLocale: defaultLanguage,
 		messages,
@@ -130,7 +131,7 @@ function installLangRouter (app) {
 
 // Switching to a loaded language
 function setLanguage (lang) {
-	i18n.locale = lang;
+	i18n.global.locale.value = lang;
 	document.querySelector('html').setAttribute('lang', lang);
 	localStorage.setItem('VueAppLanguage', lang);
 	return lang;
@@ -154,7 +155,7 @@ function loadLanguage (lang) {
 
 	// Load the translation
 	return translations[lang].load().then(function (messages) {
-		i18n.setLocaleMessage(lang, messages.default || messages);
+		i18n.global.setLocaleMessage(lang, messages.default || messages);
 		loadedTranslations.push(lang);
 		return setLanguage(lang);
 	}).catch(function (error) {
@@ -300,7 +301,7 @@ function getPrefferedLanguage () {
 // Path localization
 function localizePath (fullPath, lang) {
 	// If the desired language is not defined or it doesn't exist, use current one
-	if (!lang || !localizedURLs[lang]) { lang = i18n.locale; }
+	if (!lang || !localizedURLs[lang]) { lang = i18n.global.locale.value; }
 
 	// Separate path & query
 	let path = fullPath;
