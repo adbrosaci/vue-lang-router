@@ -52,8 +52,8 @@ function createLangRouter (routerOptions, languageOptions) {
 	// Append Lang Router install method to Vue Router install method
 	const installRouter = router.install;
 	router.install = function (app, options) {
-		installRouter(app, options);
-		installLangRouter(app);
+		installRouter.call(this, app, options);
+		installLangRouter.call(this, app);
 	};
 
 	// Return Vue Router
@@ -325,7 +325,7 @@ function localizePath (fullPath, lang) {
 	// & current path doesn't contain a language
 	// & path to translate doesn't contain a language
 	// = no need to localize
-	const currentPathLang = this.$router.currentRoute.path.split('/')[1];
+	const currentPathLang = this.$route.path.split('/')[1];
 	if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return fullPath; }
 
 	// If the path is in some language already
@@ -355,12 +355,6 @@ function localizePath (fullPath, lang) {
 
 	return translatedPath + query;
 }
-
-
-// Automatic plugin installation if in browser
-/* if (typeof window !== 'undefined' && window.Vue) {
-	window.Vue.use(LangRouter);
-} */
 
 
 // Export what's needed
