@@ -46,5 +46,8 @@ export default {
 			this.generateLinks();
 		},
 	},
+	mounted () {
+		if (typeof this.currentUrl !== 'undefined') { this.generateLinks(); }
+	},
 };
 </script>
