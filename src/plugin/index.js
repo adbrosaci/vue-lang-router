@@ -336,7 +336,8 @@ function localizePath (fullPath, lang) {
 		const resolvedRoute = this.$router.resolve(path);
 
 		if (resolvedRoute.matched.length != 0) {
-			resolvedPath = resolvedRoute.matched[resolvedRoute.matched.length - 1].path;
+			resolvedPath = resolvedRoute.matched[resolvedRoute.matched.length - 1];
+			resolvedPath = (resolvedPath.aliasOf ? resolvedPath.aliasOf.path : resolvedPath.path);
 			resolvedPath = (resolvedPath.charAt(0) == '/' ? resolvedPath : '/' + resolvedPath);
 		}
 		else {
