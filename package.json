@@ -1,6 +1,6 @@
 {
   "name": "vue-lang-router",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Vue.js language routing with (optional) URL localization",
   "author": {
     "name": "Radek Altof",

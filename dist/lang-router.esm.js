@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v1.2.1
+ * vue-lang-router v1.2.2
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
@@ -174,6 +174,9 @@ var script$1 = {
 			this.currentUrl = this.url || to.fullPath;
 			this.generateLinks();
 		},
+	},
+	mounted: function mounted () {
+		this.generateLinks();
 	},
 };
 
