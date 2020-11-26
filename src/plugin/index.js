@@ -118,7 +118,10 @@ function installLangRouter (app) {
 	isInstalled = true;
 
 	// Add translations to use in <language-switcher>
-	app.config.globalProperties._langRouter = { translations };
+	app.config.globalProperties._langRouter = {
+		translations,
+		loadLanguage,
+	};
 
 	// Add $localizePath method to return localized path
 	app.config.globalProperties.$localizePath = localizePath;
