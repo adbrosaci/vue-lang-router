@@ -1,8 +1,8 @@
 <template>
 	<div id="app">
 		<div id="nav">
-			<language-switcher v-slot="{ links }">
-				<router-link :to="link.url" v-for="link in links" :key="link.langIndex">
+			<language-switcher v-slot="{ links }" active-class="router-link-exact-active">
+				<router-link :to="link.url" v-for="link in links" :key="link.langIndex" :class="link.activeClass" exact-active-class="">
 					<img :src="require(`@/assets/${link.langIndex}.png`)" alt="" />
 					<span>{{ link.langName }}</span>
 				</router-link>
