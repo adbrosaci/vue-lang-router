@@ -363,3 +363,6 @@ function localizePath (fullPath, lang) {
 
 // Export what's needed
 export { createLangRouter, i18n };
+
+let jestAccess = () => true;
+export default jestAccess;

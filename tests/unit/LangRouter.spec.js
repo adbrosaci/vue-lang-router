@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import LangRouter from '@/plugin';
+import { createWebHistory } from 'vue-router';
+import { createLangRouter } from '@/plugin';
+import { default as internal } from '@/plugin';
 
 import routes from '../setup/routes';
 import translations from '../setup/translations';
@@ -8,35 +8,43 @@ import localizedURLs from '../setup/localized-urls';
 
 
 // Setup
-
 const defaultLanguage = 'en';
 
-Vue.use(LangRouter, {
+const langRouterOptions = {
 	defaultLanguage,
 	translations,
 	localizedURLs,
-});
-
-const router = new LangRouter({
+};
+const routerOptions = {
 	routes,
-	mode: 'history',
-});
+	history: createWebHistory(process.env.BASE_URL),
+};
+
+const router = createLangRouter(langRouterOptions, routerOptions);
+
+const vueMock = {
+	$router: router,
+	$route: {
+		get path() {
+			return router.currentRoute._value.path;
+		}
+	}
+};
 
 
 // Tests
-
 describe('General', () => {
 
 	test('translations are passed in correctly', () => {
-		expect(LangRouter.__get__('translations')).toEqual(translations);
+		expect(internal.__get__('translations')).toEqual(translations);
 	});
 
 	test('localizedURLs are passed in correctly', () => {
-		expect(LangRouter.__get__('localizedURLs')).toEqual(localizedURLs);
+		expect(internal.__get__('localizedURLs')).toEqual(localizedURLs);
 	});
 
 	test('defaultLanguage is passed in correctly', () => {
-		expect(LangRouter.__get__('defaultLanguage')).toEqual(defaultLanguage);
+		expect(internal.__get__('defaultLanguage')).toEqual(defaultLanguage);
 	});
 
 });
@@ -44,8 +52,8 @@ describe('General', () => {
 
 describe('LangRouter', () => {
 
-	test('is an instance of VueRouter', () => {
-		expect(router).toBeInstanceOf(VueRouter);
+	test('passes in router options correctly', () => {
+		expect(router.options).toEqual(routerOptions);
 	});
 
 	test('generates correct router aliases', () => {
@@ -78,7 +86,7 @@ describe('LangRouter', () => {
 				configurable: true,
 			},
 		});
-		expect(LangRouter.__get__('getPrefferedLanguage')()).toBe('ru');
+		expect(internal.__get__('getPrefferedLanguage')()).toBe('ru');
 
 		Object.defineProperty(window.navigator, 'languages', {
 			value: [
@@ -87,15 +95,12 @@ describe('LangRouter', () => {
 			],
 			configurable: true,
 		});
-		expect(LangRouter.__get__('getPrefferedLanguage')()).toBe('cs');
+		expect(internal.__get__('getPrefferedLanguage')()).toBe('cs');
 	});
 
 	test('localizes path correctly', () => {
-		const vueMock = {
-			$router: router,
-		};
 		const localizePath = (path, lang) => {
-			return LangRouter.__get__('localizePath').call(vueMock, path, lang);
+			return internal.__get__('localizePath').call(vueMock, path, lang);
 		};
 
 		expect(localizePath('/about', 'ru')).toBe('/ru/about');
@@ -121,11 +126,8 @@ describe('LangRouter', () => {
 	});
 
 	test('localizes path with query correctly', () => {
-		const vueMock = {
-			$router: router,
-		};
 		const localizePath = (path, lang) => {
-			return LangRouter.__get__('localizePath').call(vueMock, path, lang);
+			return internal.__get__('localizePath').call(vueMock, path, lang);
 		};
 
 		expect(localizePath('/about/?q=test', 'ru')).toBe('/ru/about/?q=test');
