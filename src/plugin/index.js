@@ -1,6 +1,5 @@
 import { createI18n } from 'vue-i18n';
 import { createRouter } from 'vue-router';
-export * from 'vue-router';
 
 import LocalizedLink from './components/LocalizedLink.vue';
 import LanguageSwitcher from './components/LanguageSwitcher.vue';
@@ -23,7 +22,7 @@ function err (msg, error) {
 
 
 // LangRouter adds localized URL functionality to Vue Router
-function createLangRouter (routerOptions, languageOptions) {
+function createLangRouter (languageOptions, routerOptions) {
 
 	// Setup language configuration
 	setupLanguageConfig(languageOptions);

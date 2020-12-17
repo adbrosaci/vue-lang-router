@@ -1,4 +1,5 @@
-import { createLangRouter, createWebHistory } from '../plugin';
+import { createWebHistory } from 'vue-router';
+import { createLangRouter } from '../plugin';
 import Home from '../views/Home.vue';
 
 import translations from '../lang/translations';
@@ -48,13 +49,16 @@ const routes = [
 
 
 // Initiate router
-const router = createLangRouter({
-	routes,
-	history: createWebHistory(process.env.BASE_URL),
-}, {
+const langRouterOptions = {
 	defaultLanguage: 'en',
 	translations,
 	localizedURLs,
-});
+};
+const routerOptions = {
+	routes,
+	history: createWebHistory(process.env.BASE_URL),
+};
+
+const router = createLangRouter(langRouterOptions, routerOptions);
 
 export default router;
