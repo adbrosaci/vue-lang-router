@@ -143,7 +143,7 @@ export default { cs };
 Language router will parse any given path and attempt to localize its segments based on this configuration. If no match is found, the original path segment is retained.
 
 
-#### 3. Modify your router file
+#### 4. Modify your router file
 
 - Import `LangRouter` and use it instead of `VueRouter`.
 - Import translations and localized URLs and pass them to `LangRouter` plugin.
@@ -172,7 +172,7 @@ const router = new LangRouter({
 });
 ```
 
-#### 4. Modify your main file
+#### 5. Modify your main file
 
 Import `i18n` and use it in your `Vue` instance.
 
