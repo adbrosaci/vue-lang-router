@@ -25,10 +25,10 @@ const router = createLangRouter(langRouterOptions, routerOptions);
 const vueMock = {
 	$router: router,
 	$route: {
-		get path() {
+		get path () {
 			return router.currentRoute._value.path;
-		}
-	}
+		},
+	},
 };
 
 
