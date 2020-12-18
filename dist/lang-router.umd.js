@@ -1,17 +1,14 @@
 /**
- * vue-lang-router v1.2.1
+ * vue-lang-router v2.0.0-alpha
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue-i18n'), require('vue-router')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'vue-i18n', 'vue-router'], factory) :
-	(global = global || self, factory(global.LangRouter = {}, global.VueI18n, global.VueRouter));
-}(this, (function (exports, VueI18n, VueRouter) { 'use strict';
-
-	VueI18n = VueI18n && Object.prototype.hasOwnProperty.call(VueI18n, 'default') ? VueI18n['default'] : VueI18n;
-	VueRouter = VueRouter && Object.prototype.hasOwnProperty.call(VueRouter, 'default') ? VueRouter['default'] : VueRouter;
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue-i18n'), require('vue-router'), require('vue')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'vue-i18n', 'vue-router', 'vue'], factory) :
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.LangRouter = {}, global.VueI18n, global.VueRouter, global.Vue));
+}(this, (function (exports, vueI18n, vueRouter, vue) { 'use strict';
 
 	var script = {
 		name: 'LocalizedLink',
@@ -33,116 +30,20 @@
 		},
 	};
 
-	function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
-	    if (typeof shadowMode !== 'boolean') {
-	        createInjectorSSR = createInjector;
-	        createInjector = shadowMode;
-	        shadowMode = false;
-	    }
-	    // Vue.extend constructor export interop.
-	    var options = typeof script === 'function' ? script.options : script;
-	    // render functions
-	    if (template && template.render) {
-	        options.render = template.render;
-	        options.staticRenderFns = template.staticRenderFns;
-	        options._compiled = true;
-	        // functional template
-	        if (isFunctionalTemplate) {
-	            options.functional = true;
-	        }
-	    }
-	    // scopedId
-	    if (scopeId) {
-	        options._scopeId = scopeId;
-	    }
-	    var hook;
-	    if (moduleIdentifier) {
-	        // server build
-	        hook = function (context) {
-	            // 2.3 injection
-	            context =
-	                context || // cached call
-	                    (this.$vnode && this.$vnode.ssrContext) || // stateful
-	                    (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext); // functional
-	            // 2.2 with runInNewContext: true
-	            if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-	                context = __VUE_SSR_CONTEXT__;
-	            }
-	            // inject component styles
-	            if (style) {
-	                style.call(this, createInjectorSSR(context));
-	            }
-	            // register component module identifier for async chunk inference
-	            if (context && context._registeredComponents) {
-	                context._registeredComponents.add(moduleIdentifier);
-	            }
-	        };
-	        // used by ssr in case component is cached and beforeCreate
-	        // never gets called
-	        options._ssrRegister = hook;
-	    }
-	    else if (style) {
-	        hook = shadowMode
-	            ? function (context) {
-	                style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
-	            }
-	            : function (context) {
-	                style.call(this, createInjector(context));
-	            };
-	    }
-	    if (hook) {
-	        if (options.functional) {
-	            // register for functional component in vue file
-	            var originalRender = options.render;
-	            options.render = function renderWithStyleInjection(h, context) {
-	                hook.call(context);
-	                return originalRender(h, context);
-	            };
-	        }
-	        else {
-	            // inject component registration as beforeCreate hook
-	            var existing = options.beforeCreate;
-	            options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-	        }
-	    }
-	    return script;
+	function render(_ctx, _cache, $props, $setup, $data, $options) {
+	  var _component_router_link = vue.resolveComponent("router-link");
+	  return (vue.openBlock(), vue.createBlock(_component_router_link, vue.mergeProps({
+	    to: $options.localizedTo()
+	  }, _ctx.$attrs), {
+	    default: vue.withCtx(function () { return [
+	      vue.renderSlot(_ctx.$slots, "default")
+	    ]; }),
+	    _: 3
+	  }, 16 , ["to"]))
 	}
 
-	/* script */
-	var __vue_script__ = script;
-
-	/* template */
-	var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('router-link',_vm._b({attrs:{"to":_vm.localizedTo()}},'router-link',_vm.$attrs,false),[_vm._t("default")],2)};
-	var __vue_staticRenderFns__ = [];
-
-	  /* style */
-	  var __vue_inject_styles__ = undefined;
-	  /* scoped */
-	  var __vue_scope_id__ = undefined;
-	  /* module identifier */
-	  var __vue_module_identifier__ = undefined;
-	  /* functional template */
-	  var __vue_is_functional_template__ = false;
-	  /* style inject */
-	  
-	  /* style inject SSR */
-	  
-	  /* style inject shadow dom */
-	  
-
-	  
-	  var __vue_component__ = /*#__PURE__*/normalizeComponent(
-	    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
-	    __vue_inject_styles__,
-	    __vue_script__,
-	    __vue_scope_id__,
-	    __vue_is_functional_template__,
-	    __vue_module_identifier__,
-	    false,
-	    undefined,
-	    undefined,
-	    undefined
-	  );
+	script.render = render;
+	script.__file = "src/plugin/components/LocalizedLink.vue";
 
 	var script$1 = {
 		name: 'LanguageSwitcher',
@@ -153,6 +54,11 @@
 			};
 		},
 		props: [ 'tag', 'active-class', 'url' ],
+		computed: {
+			locale: function locale () {
+				return this.$i18n.locale;
+			},
+		},
 		methods: {
 			getTag: function getTag () {
 				if (this.tag) { return this.tag; }
@@ -165,7 +71,7 @@
 				for (var lang in tr) {
 					if (tr.hasOwnProperty(lang)) {
 						links.push({
-							activeClass: (lang == this.$i18n.locale ? activeClass : ''),
+							activeClass: (lang == this.locale ? activeClass : ''),
 							langIndex: lang,
 							langName: tr[lang].name || lang,
 							url: this.$localizePath(this.currentUrl, lang),
@@ -174,58 +80,68 @@
 				}
 				this.links = links;
 			},
+			detectRouterLinkClick: function detectRouterLinkClick (e) {
+				if (!e.defaultPrevented) { return; }
+				var a = e.target;
+				while (a.tagName.toLowerCase() != 'a') {
+					if (a.classList.contains('router-language-switcher')) { return; }
+					a = a.parentNode;
+				}
+				if (a.pathname == window.location.pathname) { return; }
+				var currentRoute = this.$route.matched[this.$route.matched.length - 1];
+				if (currentRoute.aliasOf) { currentRoute = currentRoute.aliasOf; }
+				var resolvedRoute = this.$router.resolve(a.pathname);
+				if (resolvedRoute.matched.length == 0) { return; }
+				resolvedRoute = resolvedRoute.matched[resolvedRoute.matched.length - 1];
+				if (resolvedRoute.aliasOf) { resolvedRoute = resolvedRoute.aliasOf; }
+				if (currentRoute == resolvedRoute) {
+					var newRoute = a.pathname + a.search + a.hash;
+					var historyState = Object.assign({}, window.history.state, {current: newRoute});
+					var newLocale = a.pathname.split('/')[1];
+					this._langRouter.loadLanguage(newLocale).then(function () {
+						window.history.replaceState(historyState, '', newRoute);
+					});
+				}
+			},
 		},
 		watch: {
 			$route: function $route (to) {
 				this.currentUrl = this.url || to.fullPath;
 				this.generateLinks();
 			},
+			locale: function locale () {
+				if (typeof this.currentUrl !== 'undefined') { this.generateLinks(); }
+			},
+		},
+		mounted: function mounted () {
+			if (typeof this.currentUrl !== 'undefined') { this.generateLinks(); }
 		},
 	};
 
-	/* script */
-	var __vue_script__$1 = script$1;
+	function render$1(_ctx, _cache, $props, $setup, $data, $options) {
+	  return (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent($options.getTag()), {
+	    class: "router-language-switcher",
+	    onClick: $options.detectRouterLinkClick
+	  }, {
+	    default: vue.withCtx(function () { return [
+	      vue.renderSlot(_ctx.$slots, "default", { links: $data.links })
+	    ]; }),
+	    _: 3
+	  }, 8 , ["onClick"]))
+	}
 
-	/* template */
-	var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c(_vm.getTag(),{tag:"component",staticClass:"router-language-switcher"},[_vm._t("default",null,{"links":_vm.links})],2)};
-	var __vue_staticRenderFns__$1 = [];
-
-	  /* style */
-	  var __vue_inject_styles__$1 = undefined;
-	  /* scoped */
-	  var __vue_scope_id__$1 = undefined;
-	  /* module identifier */
-	  var __vue_module_identifier__$1 = undefined;
-	  /* functional template */
-	  var __vue_is_functional_template__$1 = false;
-	  /* style inject */
-	  
-	  /* style inject SSR */
-	  
-	  /* style inject shadow dom */
-	  
-
-	  
-	  var __vue_component__$1 = /*#__PURE__*/normalizeComponent(
-	    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
-	    __vue_inject_styles__$1,
-	    __vue_script__$1,
-	    __vue_scope_id__$1,
-	    __vue_is_functional_template__$1,
-	    __vue_module_identifier__$1,
-	    false,
-	    undefined,
-	    undefined,
-	    undefined
-	  );
+	script$1.render = render$1;
+	script$1.__file = "src/plugin/components/LanguageSwitcher.vue";
 
 	var defaultLanguage, translations, localizedURLs;
+	var isInstalled = false;
 	var loadedTranslations = [];
 	function err (msg, error) {
 		console.error('LangRouter: ' + msg);
 		if (typeof error !== 'undefined') { console.error(error); }
 	}
-	var LangRouter = function LangRouter (options) {
+	function createLangRouter (languageOptions, routerOptions) {
+		setupLanguageConfig(languageOptions);
 		for (var lang in translations) {
 			if (translations.hasOwnProperty(lang) && !localizedURLs[lang]) {
 				localizedURLs[lang] = {};
@@ -233,19 +149,19 @@
 		}
 		for (var lang$1 in localizedURLs) {
 			if (localizedURLs.hasOwnProperty(lang$1)) {
-				addAliasesToRoutes(options.routes, lang$1);
+				addAliasesToRoutes(routerOptions.routes, lang$1);
 			}
 		}
-		var router = new VueRouter(options);
+		var router = vueRouter.createRouter(routerOptions);
 		router.beforeEach(switchLanguage);
+		var installRouter = router.install;
+		router.install = function (app, options) {
+			installRouter.call(this, app, options);
+			installLangRouter.call(this, app);
+		};
 		return router;
-	};
-	LangRouter.install = function (Vue, options) {
-		if (LangRouter.installed) {
-			err('Already installed.');
-			return;
-		}
-		LangRouter.installed = true;
+	}
+	function setupLanguageConfig (options) {
 		if (!options) {
 			err('Options missing.');
 		}
@@ -262,8 +178,6 @@
 		if (typeof defaultLanguage !== 'string') {
 			err('options.defaultLanguage should be a string, received ' + typeof defaultLanguage + ' instead.');
 		}
-		Vue.use(VueI18n);
-		Vue.use(VueRouter);
 		var messages = {};
 		for (var lang in translations) {
 			if (translations.hasOwnProperty(lang)) {
@@ -274,18 +188,29 @@
 				}
 			}
 		}
-		exports.i18n = new VueI18n({
+		exports.i18n = vueI18n.createI18n({
+			legacy: true,
 			locale: defaultLanguage,
 			fallbackLocale: defaultLanguage,
 			messages: messages,
 		});
-		Vue.prototype._langRouter = { translations: translations };
-		Vue.prototype.$localizePath = localizePath;
-		Vue.component('localized-link', __vue_component__);
-		Vue.component('language-switcher', __vue_component__$1);
-	};
+	}
+	function installLangRouter (app) {
+		if (isInstalled) {
+			err('Already installed.');
+			return;
+		}
+		isInstalled = true;
+		app.config.globalProperties._langRouter = {
+			translations: translations,
+			loadLanguage: loadLanguage,
+		};
+		app.config.globalProperties.$localizePath = localizePath;
+		app.component('localized-link', script);
+		app.component('language-switcher', script$1);
+	}
 	function setLanguage (lang) {
-		exports.i18n.locale = lang;
+		exports.i18n.global.locale.value = lang;
 		document.querySelector('html').setAttribute('lang', lang);
 		localStorage.setItem('VueAppLanguage', lang);
 		return lang;
@@ -298,7 +223,7 @@
 			err('Unable to load translations for "' + lang + '", "load" function is missing!');
 		}
 		return translations[lang].load().then(function (messages) {
-			exports.i18n.setLocaleMessage(lang, messages.default || messages);
+			exports.i18n.global.setLocaleMessage(lang, messages.default || messages);
 			loadedTranslations.push(lang);
 			return setLanguage(lang);
 		}).catch(function (error) {
@@ -368,7 +293,7 @@
 		return extractLanguage(navigator.language || navigator.browserLanguage || navigator.userLanguage || '');
 	}
 	function localizePath (fullPath, lang) {
-		if (!lang || !localizedURLs[lang]) { lang = exports.i18n.locale; }
+		if (!lang || !localizedURLs[lang]) { lang = exports.i18n.global.locale.value; }
 		var path = fullPath;
 		var query = '';
 		if (fullPath.includes('?')) {
@@ -381,13 +306,14 @@
 		}
 		var pathChunks = path.split('/');
 		var pathLang = (localizedURLs[pathChunks[1]] ? pathChunks[1] : false);
-		var currentPathLang = this.$router.currentRoute.path.split('/')[1];
+		var currentPathLang = this.$route.path.split('/')[1];
 		if (lang == defaultLanguage && !localizedURLs[currentPathLang] && !pathLang) { return fullPath; }
 		var resolvedPath = false;
 		if (pathLang) {
 			var resolvedRoute = this.$router.resolve(path);
-			if (resolvedRoute.route.matched.length != 0) {
-				resolvedPath = resolvedRoute.route.matched[resolvedRoute.route.matched.length - 1].path;
+			if (resolvedRoute.matched.length != 0) {
+				resolvedPath = resolvedRoute.matched[resolvedRoute.matched.length - 1];
+				resolvedPath = (resolvedPath.aliasOf ? resolvedPath.aliasOf.path : resolvedPath.path);
 				resolvedPath = (resolvedPath.charAt(0) == '/' ? resolvedPath : '/' + resolvedPath);
 			}
 			else {
@@ -400,11 +326,10 @@
 		translatedPath = '/' + lang + (translatedPath.charAt(0) != '/' ? '/' : '') + translatedPath;
 		return translatedPath + query;
 	}
-	if (typeof window !== 'undefined' && window.Vue) {
-		window.Vue.use(LangRouter);
-	}
+	var jestAccess = function () { return true; };
 
-	exports.default = LangRouter;
+	exports.createLangRouter = createLangRouter;
+	exports.default = jestAccess;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
