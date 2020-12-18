@@ -47,7 +47,7 @@ export default {
 
 		// This method is a workaround for Vue Router not switching between aliased paths (when clicking on <router-link>)
 		// https://github.com/vuejs/vue-router-next/issues/613
-		async detectRouterLinkClick (e) {
+		detectRouterLinkClick (e) {
 
 			// Only execute this function if the default navigation has been prevented (by Vue Router)
 			if (!e.defaultPrevented) { return; }
@@ -80,8 +80,9 @@ export default {
 				const historyState = { ...window.history.state, current: newRoute };
 				const newLocale = a.pathname.split('/')[1];
 
-				await this._langRouter.loadLanguage(newLocale);
-				window.history.replaceState(historyState, '', newRoute);
+				this._langRouter.loadLanguage(newLocale).then(() => {
+					window.history.replaceState(historyState, '', newRoute);
+				});
 			}
 		},
 	},
