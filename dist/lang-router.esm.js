@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v2.0.0-alpha
+ * vue-lang-router v2.0.0-beta
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
@@ -208,7 +208,7 @@ function installLangRouter (app) {
 	app.component('language-switcher', script$1);
 }
 function setLanguage (lang) {
-	i18n.global.locale.value = lang;
+	i18n.global.locale = lang;
 	document.querySelector('html').setAttribute('lang', lang);
 	localStorage.setItem('VueAppLanguage', lang);
 	return lang;
@@ -291,7 +291,7 @@ function getPrefferedLanguage () {
 	return extractLanguage(navigator.language || navigator.browserLanguage || navigator.userLanguage || '');
 }
 function localizePath (fullPath, lang) {
-	if (!lang || !localizedURLs[lang]) { lang = i18n.global.locale.value; }
+	if (!lang || !localizedURLs[lang]) { lang = i18n.global.locale; }
 	var path = fullPath;
 	var query = '';
 	if (fullPath.includes('?')) {
