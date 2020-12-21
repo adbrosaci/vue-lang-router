@@ -133,7 +133,7 @@ function installLangRouter (app) {
 
 // Switching to a loaded language
 function setLanguage (lang) {
-	i18n.global.locale.value = lang;
+	i18n.global.locale = lang;
 	document.querySelector('html').setAttribute('lang', lang);
 	localStorage.setItem('VueAppLanguage', lang);
 	return lang;
@@ -303,7 +303,7 @@ function getPrefferedLanguage () {
 // Path localization
 function localizePath (fullPath, lang) {
 	// If the desired language is not defined or it doesn't exist, use current one
-	if (!lang || !localizedURLs[lang]) { lang = i18n.global.locale.value; }
+	if (!lang || !localizedURLs[lang]) { lang = i18n.global.locale; }
 
 	// Separate path & query
 	let path = fullPath;
