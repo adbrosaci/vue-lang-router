@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v1.2.2
+ * vue-lang-router v1.2.3
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
