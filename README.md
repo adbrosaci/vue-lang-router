@@ -26,9 +26,9 @@ Built on top of :vertical_traffic_light: [Vue Router](https://next.router.vuejs.
 :fast_forward: No extra router setup
 
 
-## :warning: Version information
+## Version information
 
-This is a pre-release version compatible with [Vue 3](https://v3.vuejs.org). Tread carefully. [Vue Router](https://github.com/vuejs/vue-router-next) has only just been released and [Vue I18n](https://github.com/intlify/vue-i18n-next) does not have a stable release yet. Hence this plugin may be unstable as well.
+:warning: This is a pre-release version compatible with [Vue 3](https://v3.vuejs.org). Tread carefully. [Vue Router](https://github.com/vuejs/vue-router-next) has only just been released and [Vue I18n](https://github.com/intlify/vue-i18n-next) does not have a stable release yet. Hence this plugin may be unstable as well.
 
 For [Vue 2](https://vuejs.org) compatibility, you need to use [v1](https://github.com/adbrosaci/vue-lang-router) of this project.
 
