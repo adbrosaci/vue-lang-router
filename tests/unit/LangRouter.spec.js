@@ -31,6 +31,10 @@ const vueMock = {
 	},
 };
 
+const localizePath = (path, lang) => {
+	return internal.__get__('localizePath').call(vueMock, path, lang);
+};
+
 
 // Tests
 describe('General', () => {
@@ -99,10 +103,6 @@ describe('LangRouter', () => {
 	});
 
 	test('localizes path correctly', () => {
-		const localizePath = (path, lang) => {
-			return internal.__get__('localizePath').call(vueMock, path, lang);
-		};
-
 		expect(localizePath('/about', 'ru')).toBe('/ru/about');
 		expect(localizePath('/cs/o-nas', 'en')).toBe('/en/about-replaced');
 		expect(localizePath('/cs/o-nas', 'cs')).toBe('/cs/o-nas');
@@ -113,23 +113,10 @@ describe('LangRouter', () => {
 		expect(localizePath('/user/john-smith', 'cs')).toBe('/cs/uzivatel/john-smith');
 		expect(localizePath('/ru/user/6/informatsiya', 'cs')).toBe('/cs/uzivatel/6/detail');
 
-		const originalConsoleError = console.error;
-		console.error = jest.fn();
-
-		expect(localizePath('/cs/undefined-path/detail', 'en')).toBe('/en/undefined-path/info');
-		expect(localizePath('/cs/undefined-path/detail', 'ru')).toBe('/ru/undefined-path/informatsiya');
-		expect(console.error).toHaveBeenCalledTimes(2);
-
-		console.error = originalConsoleError;
-
 		expect(localizePath('/ru/user/should-not-be-replaced/informatsiya', 'cs')).toBe('/cs/uzivatel/should-not-be-replaced/detail');
 	});
 
 	test('localizes path with query correctly', () => {
-		const localizePath = (path, lang) => {
-			return internal.__get__('localizePath').call(vueMock, path, lang);
-		};
-
 		expect(localizePath('/about/?q=test', 'ru')).toBe('/ru/about/?q=test');
 		expect(localizePath('/cs/o-nas?q=test', 'en')).toBe('/en/about-replaced?q=test');
 
@@ -138,5 +125,20 @@ describe('LangRouter', () => {
 
 		expect(localizePath('/about/?q=test#hash', 'ru')).toBe('/ru/about/?q=test#hash');
 		expect(localizePath('/cs/o-nas?q=test#hash', 'en')).toBe('/en/about-replaced?q=test#hash');
+	});
+
+	test('provides error message when unable to match route', () => {
+		const originalConsoleError = console.error; // Detect error messages
+		console.error = jest.fn();
+
+		const originalConsoleWarning = console.warn; // Get rid of Vue Router warning in tests
+		console.warn = jest.fn();
+
+		expect(localizePath('/cs/undefined-path/detail', 'en')).toBe('/en/undefined-path/info');
+		expect(localizePath('/cs/undefined-path/detail', 'ru')).toBe('/ru/undefined-path/informatsiya');
+		expect(console.error).toHaveBeenCalledTimes(2);
+
+		console.error = originalConsoleError;
+		console.warn = originalConsoleWarning;
 	});
 });
