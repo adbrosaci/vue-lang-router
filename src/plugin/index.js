@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { createRouter } from 'vue-router';
 
@@ -116,10 +117,11 @@ function installLangRouter (app) {
 	}
 	isInstalled = true;
 
-	// Add translations to use in <language-switcher>
+	// Add properties and methods for access in <language-switcher>
 	app.config.globalProperties._langRouter = {
 		translations,
 		loadLanguage,
+		forcedNewRoute: ref(''),
 	};
 
 	// Add $localizePath method to return localized path

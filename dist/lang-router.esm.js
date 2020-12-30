@@ -1,12 +1,12 @@
 /**
- * vue-lang-router v2.0.0-beta
+ * vue-lang-router v2.0.0-beta.1
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
 
+import { resolveComponent, openBlock, createBlock, mergeProps, withCtx, renderSlot, watch, resolveDynamicComponent, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { createRouter } from 'vue-router';
-import { resolveComponent, openBlock, createBlock, mergeProps, withCtx, renderSlot, resolveDynamicComponent } from 'vue';
 
 var script = {
 	name: 'LocalizedLink',
@@ -79,6 +79,7 @@ var script$1 = {
 			this.links = links;
 		},
 		detectRouterLinkClick: function detectRouterLinkClick (e) {
+			var this$1 = this;
 			if (!e.defaultPrevented) { return; }
 			var a = e.target;
 			while (a.tagName.toLowerCase() != 'a') {
@@ -98,6 +99,7 @@ var script$1 = {
 				var newLocale = a.pathname.split('/')[1];
 				this._langRouter.loadLanguage(newLocale).then(function () {
 					window.history.replaceState(historyState, '', newRoute);
+					this$1._langRouter.forcedNewRoute.value = newRoute;
 				});
 			}
 		},
@@ -112,7 +114,12 @@ var script$1 = {
 		},
 	},
 	mounted: function mounted () {
+		var this$1 = this;
 		if (typeof this.currentUrl !== 'undefined') { this.generateLinks(); }
+		watch(this._langRouter.forcedNewRoute, function (to) {
+			this$1.currentUrl = to;
+			this$1.generateLinks();
+		});
 	},
 };
 
@@ -202,6 +209,7 @@ function installLangRouter (app) {
 	app.config.globalProperties._langRouter = {
 		translations: translations,
 		loadLanguage: loadLanguage,
+		forcedNewRoute: ref(''),
 	};
 	app.config.globalProperties.$localizePath = localizePath;
 	app.component('localized-link', script);

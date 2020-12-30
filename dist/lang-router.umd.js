@@ -1,14 +1,14 @@
 /**
- * vue-lang-router v2.0.0-beta
+ * vue-lang-router v2.0.0-beta.1
  * (c) 2020 Radek Altof
  * Released under the MIT License.
  */
 
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue-i18n'), require('vue-router'), require('vue')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'vue-i18n', 'vue-router', 'vue'], factory) :
-	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.LangRouter = {}, global.VueI18n, global.VueRouter, global.Vue));
-}(this, (function (exports, vueI18n, vueRouter, vue) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue'), require('vue-i18n'), require('vue-router')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'vue', 'vue-i18n', 'vue-router'], factory) :
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.LangRouter = {}, global.Vue, global.VueI18n, global.VueRouter));
+}(this, (function (exports, vue, vueI18n, vueRouter) { 'use strict';
 
 	var script = {
 		name: 'LocalizedLink',
@@ -81,6 +81,7 @@
 				this.links = links;
 			},
 			detectRouterLinkClick: function detectRouterLinkClick (e) {
+				var this$1 = this;
 				if (!e.defaultPrevented) { return; }
 				var a = e.target;
 				while (a.tagName.toLowerCase() != 'a') {
@@ -100,6 +101,7 @@
 					var newLocale = a.pathname.split('/')[1];
 					this._langRouter.loadLanguage(newLocale).then(function () {
 						window.history.replaceState(historyState, '', newRoute);
+						this$1._langRouter.forcedNewRoute.value = newRoute;
 					});
 				}
 			},
@@ -114,7 +116,12 @@
 			},
 		},
 		mounted: function mounted () {
+			var this$1 = this;
 			if (typeof this.currentUrl !== 'undefined') { this.generateLinks(); }
+			vue.watch(this._langRouter.forcedNewRoute, function (to) {
+				this$1.currentUrl = to;
+				this$1.generateLinks();
+			});
 		},
 	};
 
@@ -204,6 +211,7 @@
 		app.config.globalProperties._langRouter = {
 			translations: translations,
 			loadLanguage: loadLanguage,
+			forcedNewRoute: vue.ref(''),
 		};
 		app.config.globalProperties.$localizePath = localizePath;
 		app.component('localized-link', script);

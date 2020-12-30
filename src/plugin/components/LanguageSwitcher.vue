@@ -6,6 +6,7 @@
 
 <script>
 // <language-switcher> component generates links to the given/current page in all available languages
+import { watch } from 'vue';
 
 export default {
 	name: 'LanguageSwitcher',
@@ -82,6 +83,7 @@ export default {
 
 				this._langRouter.loadLanguage(newLocale).then(() => {
 					window.history.replaceState(historyState, '', newRoute);
+					this._langRouter.forcedNewRoute.value = newRoute;
 				});
 			}
 		},
@@ -97,6 +99,13 @@ export default {
 	},
 	mounted () {
 		if (typeof this.currentUrl !== 'undefined') { this.generateLinks(); }
+
+		// Watch for forced route (result of detectRouterLinkClick)
+		// Using "watch" method doesn't work for some reason
+		watch(this._langRouter.forcedNewRoute, to => {
+			this.currentUrl = to;
+			this.generateLinks();
+		});
 	},
 };
 </script>
