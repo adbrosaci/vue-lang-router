@@ -23,7 +23,7 @@
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
     "vue-i18n": "9.0.0-beta.11",
-    "vue-router": "4.0.1"
+    "vue-router": "4.0.2"
   },
   "devDependencies": {
     "@intlify/vue-i18n-loader": "^2.0.0-beta.1",
