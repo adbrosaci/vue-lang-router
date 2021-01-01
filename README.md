@@ -27,7 +27,7 @@ Built on top of :vertical_traffic_light: [Vue Router](https://router.vuejs.org/)
 
 ## Version information
 
-This version is compatible with [Vue 2](https://vuejs.org/). If you need [Vue 3](https://vuejs.org) compatible version, please check out [v2](https://github.com/adbrosaci/vue-lang-router/tree/vue-3) of this project.
+This version is compatible with [Vue 2](https://vuejs.org/). If you need [Vue 3](https://v3.vuejs.org) compatible version, please check out [v2](https://github.com/adbrosaci/vue-lang-router/tree/vue-3) of this project.
 
 
 ## Installation
