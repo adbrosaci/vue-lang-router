@@ -38,11 +38,9 @@ If you are migrating from [Vue 2](https://vuejs.org), you need to adjust your `r
 ## Installation
 
 
-### ~~Vue CLI plugin (recommended)~~
+### Vue CLI plugin (recommended)
 
-~~The easiest way to install Language Router is using [Vue CLI plugin for Language Router](https://github.com/adbrosaci/vue-cli-plugin-lang-router#readme). The plugin will modify your router file, setup translation files and more.~~
-
-The Vue CLI plugin is not ready for this version yet, you have to install manually.
+The easiest way to install Language Router is using [Vue CLI plugin for Language Router](https://github.com/adbrosaci/vue-cli-plugin-lang-router#readme). The plugin will modify your router file, setup translation files and more.
 
 
 ### Manually
