@@ -6,6 +6,10 @@ Language routing and URL localization made easy.
 
 Built on top of :vertical_traffic_light: [Vue Router](https://router.vuejs.org/) and :globe_with_meridians: [Vue I18n](https://kazupon.github.io/vue-i18n/).
 
+## Demo
+
+You can play with demo at [Code Sandbox](https://codesandbox.io/s/vue-2-example-zy7ou?file=/src/router/index.js).
+
 ## Features
 
 :hourglass_flowing_sand: Asynchronous translation loading
