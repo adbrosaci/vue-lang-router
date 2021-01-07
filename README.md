@@ -47,6 +47,12 @@ If you are migrating from [Vue 2](https://vuejs.org), you need to adjust your `r
 
 The easiest way to install Language Router is using [Vue CLI plugin for Language Router](https://github.com/adbrosaci/vue-cli-plugin-lang-router#readme). The plugin will modify your router file, setup translation files and more.
 
+Use this command to add Language Router to your Vue.js project:
+
+```sh
+$ vue add lang-router
+```
+
 
 ### Manually
 
