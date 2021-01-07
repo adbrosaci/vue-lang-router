@@ -7,6 +7,11 @@ Language routing and URL localization made easy.
 Built on top of :vertical_traffic_light: [Vue Router](https://next.router.vuejs.org) and :globe_with_meridians: [Vue I18n](https://vue-i18n-next.intlify.dev).
 
 
+## Demo
+
+You can play with demo at [Code Sandbox](https://codesandbox.io/s/vue-3-example-i4rtt).
+
+
 ## Features
 
 :hourglass_flowing_sand: Asynchronous translation loading
