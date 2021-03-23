@@ -4,12 +4,16 @@ import Home from '../views/Home.vue';
 
 import translations from '../lang/translations';
 import localizedURLs from '../lang/localized-urls';
+import dateTimeFormats from '../lang/dateTimeFormats';
 
 
 Vue.use(LangRouter, {
 	defaultLanguage: 'en',
 	translations,
 	localizedURLs,
+	i18nOptions: {
+		dateTimeFormats,
+	},
 });
 
 

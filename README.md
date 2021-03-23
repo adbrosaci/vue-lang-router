@@ -297,3 +297,22 @@ The wrapper element will have `router-language-switcher` class.
 - **tag** : Use this attribute to specify which tag should be used as a wrapper element. The default is `div`.
 - **url** : Provides a specific path to generate translation links for. If omitted, current path is used.
 - **active-class** : Defines the name of class to provide when language of the link equals current language. The default is `router-active-language`.
+
+
+### Vue I18n customization
+
+In case you'd like to pass in custom `vue-i18n` options, you can do so using `i18nOptions` property, for example:
+
+```javascript
+/*  src/router/index.js  */
+
+Vue.use(LangRouter, {
+  defaultLanguage: 'en',
+  translations,
+  localizedURLs,
+  i18nOptions: {
+    dateTimeFormats: { ... },
+    pluralizationRules: { ... },
+  }
+});
+```

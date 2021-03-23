@@ -5,6 +5,7 @@ import LangRouter from '@/plugin';
 import routes from '../setup/routes';
 import translations from '../setup/translations';
 import localizedURLs from '../setup/localized-urls';
+import { dateTimeFormats, pluralizationRules } from '../setup/i18nOptions';
 
 
 // Setup
@@ -15,6 +16,10 @@ Vue.use(LangRouter, {
 	defaultLanguage,
 	translations,
 	localizedURLs,
+	i18nOptions: {
+		dateTimeFormats,
+		pluralizationRules,
+	},
 });
 
 const router = new LangRouter({
@@ -39,6 +44,10 @@ describe('General', () => {
 		expect(LangRouter.__get__('defaultLanguage')).toEqual(defaultLanguage);
 	});
 
+	test('i18nOptions are passed in correctly', () => {
+		expect(LangRouter.__get__('i18n').dateTimeFormats).toEqual(dateTimeFormats);
+		expect(LangRouter.__get__('i18n').pluralizationRules).toEqual(pluralizationRules);
+	});
 });
 
 

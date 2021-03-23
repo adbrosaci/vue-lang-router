@@ -106,6 +106,7 @@ LangRouter.install = function (Vue, options) {
 		locale: defaultLanguage,
 		fallbackLocale: defaultLanguage,
 		messages,
+		...options.i18nOptions,
 	});
 
 	// Add translations to use in <language-switcher>
