@@ -1,6 +1,6 @@
 /**
- * vue-lang-router v1.2.5
- * (c) 2020 Radek Altof
+ * vue-lang-router v1.3.0
+ * (c) 2021 Radek Altof
  * Released under the MIT License.
  */
 
@@ -12,6 +12,21 @@
 
 	VueI18n = VueI18n && Object.prototype.hasOwnProperty.call(VueI18n, 'default') ? VueI18n['default'] : VueI18n;
 	VueRouter = VueRouter && Object.prototype.hasOwnProperty.call(VueRouter, 'default') ? VueRouter['default'] : VueRouter;
+
+	function mergeObjects() {
+		var arguments$1 = arguments;
+		var targetObject = {};
+		for (var i = 0; i < arguments.length; i++) {
+			var sourceObject = arguments$1[i];
+			for (var key in sourceObject) {
+				if (Object.prototype.hasOwnProperty.call(sourceObject, key)) {
+					targetObject[key] = sourceObject[key];
+				}
+			}
+		}
+		return targetObject;
+	}
+	var _spread = Object.assign || mergeObjects;
 
 	var script = {
 		name: 'LocalizedLink',
@@ -277,11 +292,10 @@
 				}
 			}
 		}
-		exports.i18n = new VueI18n({
-			locale: defaultLanguage,
+		exports.i18n = new VueI18n(_spread({}, {locale: defaultLanguage,
 			fallbackLocale: defaultLanguage,
-			messages: messages,
-		});
+			messages: messages},
+			options.i18nOptions));
 		Vue.prototype._langRouter = { translations: translations };
 		Vue.prototype.$localizePath = localizePath;
 		Vue.component('localized-link', __vue_component__);

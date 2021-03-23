@@ -4,6 +4,7 @@ import buble from '@rollup/plugin-buble'; // Transpile/polyfill with reasonable 
 import banner from 'rollup-plugin-banner'; // Add header to compiled JS files
 import { terser } from 'rollup-plugin-terser'; // Minification
 import cleanup from 'rollup-plugin-cleanup'; // Code cleanup
+import inject from '@rollup/plugin-inject'; // Import injection
 
 const path = require('path');
 
@@ -56,7 +57,12 @@ export default {
 				isProduction: true, // Force productiom mode
 			},
 		}),
-		buble(), // Transpile to ES5
+		buble({
+			objectAssign: '_spread', // Polyfill for spread operator
+		}),
+		inject({
+			'_spread': path.resolve('helpers/spread-polyfill.js'),
+		}),
 		banner({
 			file: path.join(__dirname, 'rollup.banner.txt'),
 		}),

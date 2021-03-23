@@ -1,6 +1,6 @@
 {
   "name": "vue-lang-router",
-  "version": "1.2.5",
+  "version": "1.3.0",
   "description": "Vue.js language routing with (optional) URL localization",
   "author": {
     "name": "Radek Altof",
@@ -30,6 +30,7 @@
     "@radek-altof/lint-config": "^1.1.0",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-inject": "^4.0.2",
     "@vue/cli-plugin-babel": "~4.3.0",
     "@vue/cli-plugin-eslint": "~4.3.0",
     "@vue/cli-plugin-router": "~4.3.0",
