@@ -5,6 +5,7 @@ import { default as internal } from '@/plugin';
 import routes from '../setup/routes';
 import translations from '../setup/translations';
 import localizedURLs from '../setup/localized-urls';
+import { datetimeFormats, pluralizationRules } from '../setup/i18nOptions';
 
 
 // Setup
@@ -14,6 +15,10 @@ const langRouterOptions = {
 	defaultLanguage,
 	translations,
 	localizedURLs,
+	i18nOptions: {
+		datetimeFormats,
+		pluralizationRules,
+	},
 };
 const routerOptions = {
 	routes,
@@ -51,6 +56,10 @@ describe('General', () => {
 		expect(internal.__get__('defaultLanguage')).toEqual(defaultLanguage);
 	});
 
+	test('i18nOptions are passed in correctly', () => {
+		expect(internal.__get__('i18n').global.datetimeFormats).toEqual(datetimeFormats);
+		expect(internal.__get__('i18n').global.pluralizationRules).toEqual(pluralizationRules);
+	});
 });
 
 

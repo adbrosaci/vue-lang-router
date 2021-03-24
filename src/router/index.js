@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 
 import translations from '../lang/translations';
 import localizedURLs from '../lang/localized-urls';
+import datetimeFormats from '../lang/datetimeFormats';
 
 
 const routes = [
@@ -53,6 +54,9 @@ const langRouterOptions = {
 	defaultLanguage: 'en',
 	translations,
 	localizedURLs,
+	i18nOptions: {
+		datetimeFormats,
+	},
 };
 const routerOptions = {
 	routes,

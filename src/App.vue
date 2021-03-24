@@ -21,6 +21,10 @@
 			<localized-link to="/pos/12/manager/Johnny">{{ $t('pos.manager') }}</localized-link>
 		</div>
 		<router-view/>
+		<footer>
+			<p>{{ $d(new Date(), 'short') }}</p>
+			<p>{{ $d(new Date(), 'long') }}</p>
+		</footer>
 	</div>
 </template>
 
@@ -82,6 +86,19 @@ h1 {
 		&.dotted-border {
 			outline: 1px dotted #42b983;
 		}
+	}
+}
+
+footer {
+	position: fixed;
+	right: 10px;
+	bottom: 10px;
+	color: #999;
+	font-size: 12px;
+	text-align: right;
+
+	p {
+		margin: 5px;
 	}
 }
 </style>

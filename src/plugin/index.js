@@ -103,6 +103,7 @@ function setupLanguageConfig (options) {
 		locale: defaultLanguage,
 		fallbackLocale: defaultLanguage,
 		messages,
+		...options.i18nOptions,
 	});
 }
 

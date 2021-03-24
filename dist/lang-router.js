@@ -1,5 +1,5 @@
 /**
- * vue-lang-router v2.0.0
+ * vue-lang-router v2.1.0
  * (c) 2021 Radek Altof
  * Released under the MIT License.
  */
@@ -192,12 +192,11 @@ var LangRouter = (function (exports, vue, vueI18n, vueRouter) {
 				}
 			}
 		}
-		exports.i18n = vueI18n.createI18n({
-			legacy: true,
+		exports.i18n = vueI18n.createI18n(Object.assign({}, {legacy: true,
 			locale: defaultLanguage,
 			fallbackLocale: defaultLanguage,
-			messages: messages,
-		});
+			messages: messages},
+			options.i18nOptions));
 	}
 	function installLangRouter (app) {
 		if (isInstalled) {
