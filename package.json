@@ -22,11 +22,11 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "3.0.5",
-    "vue-i18n": "9.0.0-rc.1",
+    "vue-i18n": "9.0.0",
     "vue-router": "4.0.2"
   },
   "devDependencies": {
-    "@intlify/vue-i18n-loader": "^2.0.0-beta.3",
+    "@intlify/vue-i18n-loader": "^2.0.3",
     "@radek-altof/lint-config": "^1.1.0",
     "@rollup/plugin-buble": "^0.21.3",
     "@vue/cli-plugin-babel": "~4.5.0",
