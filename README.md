@@ -33,9 +33,7 @@ You can play with demo at [Code Sandbox](https://codesandbox.io/s/vue-3-example-
 
 ## Version information
 
-:warning: This is a pre-release version compatible with [Vue 3](https://v3.vuejs.org). Tread carefully. [Vue Router](https://github.com/vuejs/vue-router-next) has only just been released and [Vue I18n](https://github.com/intlify/vue-i18n-next) does not have a stable release yet. Hence this plugin may be unstable as well.
-
-For [Vue 2](https://vuejs.org) compatibility, you need to use [v1](https://github.com/adbrosaci/vue-lang-router) of this project.
+This version is compatible with [Vue 3](https://v3.vuejs.org). If you need [Vue 2](https://vuejs.org) compatible version, please check out [v1](https://github.com/adbrosaci/vue-lang-router) of this project.
 
 If you are migrating from [Vue 2](https://vuejs.org), you need to adjust your `router.js` and `main.js` files. See points 4 and 5.
 
