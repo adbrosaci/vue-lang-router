@@ -55,7 +55,7 @@ export default {
 			},
 		}),
 		buble({
-			objectAssign: 'Object.assign', // Polyfill for spread operator
+			objectAssign: true, // Polyfill for spread operator
 		}),
 		banner({
 			file: path.join(__dirname, 'rollup.banner.txt'),
