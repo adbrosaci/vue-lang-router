@@ -61,7 +61,7 @@ export default {
 			objectAssign: '_spread', // Polyfill for spread operator
 		}),
 		inject({
-			'_spread': path.resolve('helpers/spread-polyfill.js'),
+			_spread: path.resolve('helpers/spread-polyfill.js'),
 		}),
 		banner({
 			file: path.join(__dirname, 'rollup.banner.txt'),
