@@ -149,7 +149,7 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 		name: 'LanguageSwitcher',
 		data: function data () {
 			return {
-				currentUrl: this.url || this.$router.currentRoute.fullPath,
+				currentUrl: this.url || this.$router.currentRoute.fullPath || this.$router.currentRoute.value.fullPath,
 				links: [],
 			};
 		},
@@ -240,7 +240,7 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 				addAliasesToRoutes(options.routes, lang$1);
 			}
 		}
-		var router = new VueRouter__default['default'](options);
+		var router = new VueRouter__default["default"](options);
 		router.beforeEach(switchLanguage);
 		return router;
 	};
@@ -266,8 +266,8 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 		if (typeof defaultLanguage !== 'string') {
 			err('options.defaultLanguage should be a string, received ' + typeof defaultLanguage + ' instead.');
 		}
-		Vue.use(VueI18n__default['default']);
-		Vue.use(VueRouter__default['default']);
+		Vue.use(VueI18n__default["default"]);
+		Vue.use(VueRouter__default["default"]);
 		var messages = {};
 		for (var lang in translations) {
 			if (translations.hasOwnProperty(lang)) {
@@ -278,7 +278,7 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 				}
 			}
 		}
-		exports.i18n = new VueI18n__default['default'](_spread({}, {locale: defaultLanguage,
+		exports.i18n = new VueI18n__default["default"](_spread({}, {locale: defaultLanguage,
 			fallbackLocale: defaultLanguage,
 			messages: messages},
 			options.i18nOptions));
@@ -407,10 +407,10 @@ var LangRouter = (function (exports, VueI18n, VueRouter) {
 		window.Vue.use(LangRouter);
 	}
 
-	exports['default'] = LangRouter;
+	exports["default"] = LangRouter;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
 	return exports;
 
-}({}, VueI18n, VueRouter));
+})({}, VueI18n, VueRouter);
