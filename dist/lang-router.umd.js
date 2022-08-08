@@ -8,7 +8,7 @@
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue-i18n'), require('vue-router')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'vue-i18n', 'vue-router'], factory) :
 	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.LangRouter = {}, global.VueI18n, global.VueRouter));
-}(this, (function (exports, VueI18n, VueRouter) { 'use strict';
+})(this, (function (exports, VueI18n, VueRouter) { 'use strict';
 
 	function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -152,7 +152,7 @@
 		name: 'LanguageSwitcher',
 		data: function data () {
 			return {
-				currentUrl: this.url || this.$router.currentRoute.fullPath,
+				currentUrl: this.url || this.$router.currentRoute.fullPath || this.$router.currentRoute.value.fullPath,
 				links: [],
 			};
 		},
@@ -243,7 +243,7 @@
 				addAliasesToRoutes(options.routes, lang$1);
 			}
 		}
-		var router = new VueRouter__default['default'](options);
+		var router = new VueRouter__default["default"](options);
 		router.beforeEach(switchLanguage);
 		return router;
 	};
@@ -269,8 +269,8 @@
 		if (typeof defaultLanguage !== 'string') {
 			err('options.defaultLanguage should be a string, received ' + typeof defaultLanguage + ' instead.');
 		}
-		Vue.use(VueI18n__default['default']);
-		Vue.use(VueRouter__default['default']);
+		Vue.use(VueI18n__default["default"]);
+		Vue.use(VueRouter__default["default"]);
 		var messages = {};
 		for (var lang in translations) {
 			if (translations.hasOwnProperty(lang)) {
@@ -281,7 +281,7 @@
 				}
 			}
 		}
-		exports.i18n = new VueI18n__default['default'](_spread({}, {locale: defaultLanguage,
+		exports.i18n = new VueI18n__default["default"](_spread({}, {locale: defaultLanguage,
 			fallbackLocale: defaultLanguage,
 			messages: messages},
 			options.i18nOptions));
@@ -410,8 +410,8 @@
 		window.Vue.use(LangRouter);
 	}
 
-	exports['default'] = LangRouter;
+	exports["default"] = LangRouter;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
