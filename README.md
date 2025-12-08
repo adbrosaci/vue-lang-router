@@ -1,3 +1,6 @@
+### :warning: This package is no longer maintained and has been deprecated. Feel free to make a fork if useful for you.
+---
+
 # :earth_africa: Vue Language Router
 
 Language routing and URL localization made easy.
