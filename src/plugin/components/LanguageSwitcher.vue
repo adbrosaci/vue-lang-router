@@ -11,7 +11,7 @@ export default {
 	name: 'LanguageSwitcher',
 	data () {
 		return {
-			currentUrl: this.url || this.$router.currentRoute.fullPath,
+			currentUrl: this.url || this.$router.currentRoute.fullPath || this.$router.currentRoute.value.fullPath,
 			links: [],
 		};
 	},
